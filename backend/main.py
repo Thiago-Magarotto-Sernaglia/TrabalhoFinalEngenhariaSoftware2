@@ -4,7 +4,7 @@ import asyncpg
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, EmailStr
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:senha@localhost:5432/meu_bd")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 app = FastAPI()
 _db_pool: asyncpg.pool.Pool | None = None
@@ -29,6 +29,31 @@ class ClienteIn(BaseModel):
 async def startup():
     global _db_pool
     _db_pool = await asyncpg.create_pool(DATABASE_URL, min_size=1, max_size=10)
+
+    async with _db_pool.acquire() as conn:
+        await conn.execute("""
+            CREATE TABLE IF NOT EXISTS gerente (
+                id SERIAL PRIMARY KEY,
+                nome TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE
+            );
+        """)
+        await conn.execute("""
+            CREATE TABLE IF NOT EXISTS vendedor (
+                id SERIAL PRIMARY KEY,
+                nome TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                gerente_id INTEGER REFERENCES gerente(id)
+            );
+        """)
+        await conn.execute("""
+            CREATE TABLE IF NOT EXISTS cliente (
+                id SERIAL PRIMARY KEY,
+                nome TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                vendedor_id INTEGER REFERENCES vendedor(id)
+            );
+        """)
 
 @app.on_event("shutdown")
 async def shutdown():
@@ -117,4 +142,4 @@ async def listar_clientes():
 # Execução local (uvicorn)
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
