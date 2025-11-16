@@ -1,0 +1,152 @@
+<title>Minha Lista de Desejos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.07);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f39c12; /* Laranja para destaque */
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        h1 i {
+            margin-right: 15px;
+            color: #e74c3c; /* Vermelho para coração/desejo */
+        }
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .product-card {
+            background-color: #fcfcfc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+            text-align: center;
+            border: 1px solid #eee;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        .product-card img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .product-card h3 {
+            color: #2c3e50;
+            margin: 10px 0;
+            font-size: 1.3em;
+        }
+        .product-card p {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #27ae60; /* Verde para preço */
+            margin-bottom: 15px;
+        }
+        .status {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .status.out-of-stock {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .product-card button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .product-card button:hover:not(:disabled) {
+            background-color: #2980b9;
+        }
+        .product-card button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .remove-link {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #e74c3c;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        .remove-link:hover {
+            color: #c0392b;
+        }
+
+        /* FontAwesome for icons */
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-heart"></i> Minha Lista de Desejos</h1>
+        <p>Produtos que você salvou para comprar mais tarde. Fique de olho nos itens fora de estoque!</p>
+
+        <div class="wishlist-grid">
+            <div class="product-card">
+                <a href="#" class="remove-link" title="Remover"><i class="fas fa-times-circle"></i></a>
+                <img src="https://via.placeholder.com/250x200/3498db/ffffff?text=Produto+A" alt="Produto A">
+                <h3>Camiseta Premium</h3>
+                <p>R$ 49,90</p>
+                <p class="status">Em estoque (5 unidades)</p>
+                <button><i class="fas fa-cart-plus"></i> Adicionar ao Carrinho</button>
+            </div>
+
+            <div class="product-card">
+                <a href="#" class="remove-link" title="Remover"><i class="fas fa-times-circle"></i></a>
+                <img src="https://via.placeholder.com/250x200/e74c3c/ffffff?text=Produto+B" alt="Produto B">
+                <h3>Fone de Ouvido Bluetooth</h3>
+                <p>R$ 120,00</p>
+                <p class="status out-of-stock"><i class="fas fa-exclamation-triangle"></i> Fora de estoque</p>
+                <button disabled>Indisponível</button>
+            </div>
+            
+            <div class="product-card">
+                <a href="#" class="remove-link" title="Remover"><i class="fas fa-times-circle"></i></a>
+                <img src="https://via.placeholder.com/250x200/2ecc71/ffffff?text=Produto+C" alt="Produto C">
+                <h3>Livro de Receitas</h3>
+                <p>R$ 75,50</p>
+                <p class="status">Em estoque</p>
+                <button><i class="fas fa-cart-plus"></i> Adicionar ao Carrinho</button>
+            </div>
+        </div>
+        
+        <p style="text-align: center; margin-top: 40px;"><a href="/" style="color: #2c3e50; text-decoration: none; font-weight: bold;"><i class="fas fa-arrow-left"></i> Continuar Comprando</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Cliente - Minha Conta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50; /* Azul escuro */
+            color: #ecf0f1;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        .sidebar h2 {
+            text-align: center;
+            color: #ecf0f1;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .sidebar ul li a:hover, .sidebar ul li strong a {
+            background-color: #34495e; /* Azul um pouco mais claro */
+            color: #ffffff;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            background-color: #ffffff;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+        .main-content h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .welcome-message {
+            background-color: #e8f5e9; /* Verde claro */
+            color: #2e7d32; /* Verde escuro */
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+        .welcome-message i {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .card {
+            background-color: #fcfcfc;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border-left: 5px solid #3498db; /* Azul primário */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .card p {
+            color: #555;
+            margin-bottom: 8px;
+        }
+        .card a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+        .card a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* FontAwesome for icons */
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <h2><i class="fas fa-user-circle"></i> Minha Conta</h2>
+            <nav>
+                <ul>
+                    <li><strong><a href="/minha-conta"><i class="fas fa-home"></i> Painel</a></strong></li>
+                    <li><a href="/minha-conta/perfil"><i class="fas fa-user-edit"></i> Meu Perfil</a></li>
+                    <li><a href="/minha-conta/pedidos"><i class="fas fa-box-open"></i> Meus Pedidos</a></li>
+                    <li><a href="/minha-conta/lista-de-desejos"><i class="fas fa-heart"></i> Lista de Desejos</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1><i class="fas fa-tachometer-alt"></i> Painel de Controle</h1>
+            
+            <div class="welcome-message">
+                <i class="far fa-smile-beam"></i>
+                Olá, [Nome do Cliente]! Seja bem-vindo(a) de volta à sua área de cliente.
+            </div>
+
+            <h2>Visão Geral Rápida</h2>
+            <div class="summary-grid">
+                <div class="card">
+                    <h3><i class="fas fa-boxes"></i> Último Pedido</h3>
+                    <p><strong>#6789</strong></p>
+                    <p>Status: <span style="color: #f39c12; font-weight: bold;">Em Preparação</span></p>
+                    <p>Data: 25/11/2025</p>
+                    <a href="/minha-conta/pedidos/6789">Ver detalhes do pedido <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-user-cog"></i> Meu Perfil</h3>
+                    <p>E-mail: cliente@exemplo.com</p>
+                    <p>Membro desde: 10/01/2025</p>
+                    <a href="/minha-conta/perfil">Gerenciar informações <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-heart"></i> Lista de Desejos</h3>
+                    <p>Você tem **3 itens** na sua lista.</p>
+                    <p>Não perca suas escolhas favoritas!</p>
+                    <a href="/minha-conta/lista-de-desejos">Ver lista <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

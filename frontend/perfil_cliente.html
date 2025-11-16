@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.07);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        h1 i {
+            margin-right: 15px;
+            color: #3498db;
+        }
+        form {
+            margin-top: 25px;
+            background-color: #fdfdfd;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        form + form { /* Espaço entre os formulários */
+            margin-top: 40px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 i {
+            margin-right: 10px;
+            color: #8e44ad; /* Cor para perfil/senha */
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        button[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+            margin: 40px 0;
+        }
+
+        /* FontAwesome for icons */
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-user-edit"></i> Meu Perfil</h1>
+        <p>Atualize suas informações de contato e credenciais de login.</p>
+
+        <form action="/api/perfil/atualizar" method="POST">
+            <h2><i class="fas fa-id-card-alt"></i> Dados Pessoais</h2>
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" value="Nome do Cliente Exemplo" required>
+            
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" value="cliente@exemplo.com" required>
+
+            <button type="submit">Salvar Alterações</button>
+        </form>
+
+        <form action="/api/perfil/senha" method="POST">
+            <h2><i class="fas fa-key"></i> Alterar Senha</h2>
+            <label for="senha_atual">Senha Atual:</label>
+            <input type="password" id="senha_atual" name="senha_atual" placeholder="Digite sua senha atual" required>
+            
+            <label for="nova_senha">Nova Senha:</label>
+            <input type="password" id="nova_senha" name="nova_senha" placeholder="Crie uma nova senha" required>
+
+            <label for="confirma_senha">Confirmar Nova Senha:</label>
+            <input type="password" id="confirma_senha" name="confirma_senha" placeholder="Confirme sua nova senha" required>
+
+            <button type="submit">Alterar Senha</button>
+        </form>
+    </div>
+</body>
+</html>
