@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos - Sua Loja</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navbar igual à home -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html" class="text-2xl font-bold text-indigo-600">SuaLogo</a>
+                <div class="flex items-center space-x-4">
+                    <a href="carrinho.html" class="text-gray-500 hover:text-indigo-600 relative">
+                        <span class="sr-only">Carrinho</span>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </a>
+                    <a href="login.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="lg:grid lg:grid-cols-4 lg:gap-x-8">
+            
+            <!-- Sidebar / Filtros -->
+            <aside class="hidden lg:block">
+                <h3 class="text-lg font-medium text-gray-900">Categorias</h3>
+                <ul class="mt-4 space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
+                    <li><a href="#" class="text-indigo-600">Todos</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600">Eletrônicos</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600">Acessórios</a></li>
+                    <li><a href="#" class="text-gray-500 hover:text-indigo-600">Computadores</a></li>
+                </ul>
+
+                <h3 class="text-lg font-medium text-gray-900 mt-6">Preço</h3>
+                <div class="mt-4 space-y-2">
+                    <div class="flex items-center">
+                        <input id="price-1" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                        <label for="price-1" class="ml-3 text-sm text-gray-600">Até R$ 100</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="price-2" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                        <label for="price-2" class="ml-3 text-sm text-gray-600">R$ 100 - R$ 500</label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Grid de Produtos -->
+            <div class="mt-6 lg:mt-0 lg:col-span-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Produto Exemplo -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
+                        <a href="produto_detalhe.html">
+                            <div class="h-48 bg-gray-200 w-full flex items-center justify-center">
+                                <span class="text-gray-400 text-sm">Imagem</span>
+                            </div>
+                        </a>
+                        <div class="p-4">
+                            <h3 class="text-lg font-medium text-gray-900">
+                                <a href="produto_detalhe.html">Notebook Gamer</a>
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-500">Potência máxima</p>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-xl font-bold text-indigo-600">R$ 4.500</span>
+                                <button class="p-2 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Repetir cards conforme necessário -->
+                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
+                        <a href="produto_detalhe.html">
+                            <div class="h-48 bg-gray-200 w-full flex items-center justify-center">
+                                <span class="text-gray-400 text-sm">Imagem</span>
+                            </div>
+                        </a>
+                        <div class="p-4">
+                            <h3 class="text-lg font-medium text-gray-900">
+                                <a href="produto_detalhe.html">Mouse Wireless</a>
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-500">Ergonômico e rápido</p>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-xl font-bold text-indigo-600">R$ 150</span>
+                                <button class="p-2 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

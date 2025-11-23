@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrinho - Sua Loja</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html" class="text-2xl font-bold text-indigo-600">SuaLogo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Meu Carrinho</h1>
+
+        <div class="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">
+            
+            <!-- Lista de Itens -->
+            <section class="lg:col-span-7">
+                <ul class="border-t border-b border-gray-200 divide-y divide-gray-200">
+                    
+                    <!-- Item 1 -->
+                    <li class="flex py-6">
+                        <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-white">
+                            <!-- Placeholder IMG -->
+                        </div>
+
+                        <div class="ml-4 flex flex-1 flex-col">
+                            <div>
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                    <h3><a href="produto_detalhe.html">Notebook Gamer</a></h3>
+                                    <p class="ml-4">R$ 4.500,00</p>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Preto</p>
+                            </div>
+                            <div class="flex flex-1 items-end justify-between text-sm">
+                                <p class="text-gray-500">Qtd 1</p>
+                                <div class="flex">
+                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remover</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Item 2 -->
+                    <li class="flex py-6">
+                        <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-white">
+                            <!-- Placeholder IMG -->
+                        </div>
+
+                        <div class="ml-4 flex flex-1 flex-col">
+                            <div>
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                    <h3><a href="produto_detalhe.html">Mouse Wireless</a></h3>
+                                    <p class="ml-4">R$ 150,00</p>
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Óptico</p>
+                            </div>
+                            <div class="flex flex-1 items-end justify-between text-sm">
+                                <p class="text-gray-500">Qtd 1</p>
+                                <div class="flex">
+                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remover</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Resumo do Pedido -->
+            <section class="lg:col-span-5 mt-16 lg:mt-0 bg-white shadow rounded-lg px-4 py-6 sm:p-6 lg:p-8">
+                <h2 class="text-lg font-medium text-gray-900">Resumo do pedido</h2>
+
+                <div class="mt-6 space-y-4">
+                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
+                        <dt class="flex items-center text-sm text-gray-600">
+                            <span>Subtotal</span>
+                        </dt>
+                        <dd class="text-sm font-medium text-gray-900">R$ 4.650,00</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
+                        <dt class="flex text-sm text-gray-600">
+                            <span>Frete Estimado</span>
+                        </dt>
+                        <dd class="text-sm font-medium text-gray-900">R$ 50,00</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
+                        <dt class="text-base font-medium text-gray-900">Total</dt>
+                        <dd class="text-base font-medium text-gray-900">R$ 4.700,00</dd>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <a href="finalizar_pedido.html" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 flex justify-center">
+                        Finalizar Compra
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
