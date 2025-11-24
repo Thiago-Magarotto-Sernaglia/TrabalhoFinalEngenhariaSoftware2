@@ -1,0 +1,477 @@
+/* =========================================
+   1. Variáveis e Reset Global
+   ========================================= */
+:root {
+    /* Paleta de Cores */
+    --primary-color: #2c3e50;      /* Azul Noturno (Menus, Títulos) */
+    --accent-color: #3498db;       /* Azul Vibrante (Links, Botões) */
+    --accent-hover: #2980b9;       /* Azul Escuro (Hover) */
+    --success-color: #27ae60;      /* Verde (Sucesso, Preço) */
+    --warning-color: #f39c12;      /* Laranja (Atenção, Transporte) */
+    --danger-color: #e74c3c;       /* Vermelho (Erro, Remover) */
+    --bg-body: #f4f6f8;            /* Cinza muito claro (Fundo) */
+    --bg-card: #ffffff;            /* Branco (Cartões) */
+    --text-main: #333333;          /* Texto Principal */
+    --text-light: #7f8c8d;         /* Texto Secundário */
+    --border-color: #e0e0e0;       /* Bordas Suaves */
+    
+    /* Espaçamento e Sombras */
+    --radius: 8px;
+    --shadow-sm: 0 2px 5px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* Importando Fonte Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    margin: 0;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+a {
+    text-decoration: none;
+    color: var(--accent-color);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+/* =========================================
+   2. Layout e Containers
+   ========================================= */
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    background-color: var(--bg-card);
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+}
+
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    margin: 20px;
+    background-color: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+/* =========================================
+   3. Sidebar (Menu Lateral)
+   ========================================= */
+.sidebar {
+    width: 260px;
+    background-color: var(--primary-color);
+    color: #ecf0f1;
+    padding: 20px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    color: #fff;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li a {
+    display: block;
+    color: #bdc3c7;
+    padding: 12px 15px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.sidebar ul li a:hover, 
+.sidebar ul li strong a {
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+/* =========================================
+   4. Formulários (Inputs e Botões)
+   ========================================= */
+form {
+    background-color: #fff;
+    padding: 0; /* Removido padding interno se já estiver no container */
+}
+
+fieldset {
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: var(--radius);
+}
+
+legend {
+    font-weight: 700;
+    color: var(--primary-color);
+    padding: 0 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+button, .finalizar-btn {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+    display: inline-block;
+}
+
+button:hover, .finalizar-btn:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* =========================================
+   5. Tabelas (Lista de Pedidos)
+   ========================================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+th, td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: var(--primary-color);
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: #f9f9f9;
+}
+
+/* Badges de Status */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.status-entregue { background-color: var(--success-color); }
+.status-transporte { background-color: var(--warning-color); }
+.status-pendente { background-color: var(--danger-color); }
+.status-preparacao { background-color: var(--accent-color); }
+
+/* =========================================
+   6. Timeline (Acompanhamento)
+   ========================================= */
+.status-timeline {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0;
+    position: relative;
+}
+
+.status-timeline::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 40px;
+    right: 40px;
+    height: 4px;
+    background-color: #eee;
+    z-index: 1;
+}
+
+.status-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.status-circle {
+    width: 50px;
+    height: 50px;
+    line-height: 45px; /* Centralizar verticalmente ícone/texto */
+    background-color: #fff;
+    border: 4px solid #eee;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    font-weight: bold;
+    color: #ccc;
+    font-size: 1.2rem;
+    transition: all 0.4s ease;
+}
+
+/* Passos Concluídos */
+.status-step.completed .status-circle {
+    border-color: var(--success-color);
+    background-color: var(--success-color);
+    color: #fff;
+}
+
+/* Passo Atual */
+.status-step.active .status-circle {
+    border-color: var(--accent-color);
+    background-color: #fff;
+    color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+}
+
+.status-step p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.status-step.active p {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.details-box {
+    background-color: #e8f6f3;
+    border-left: 5px solid var(--success-color);
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 4px;
+}
+
+/* =========================================
+   7. Grids (Cards e Lista de Desejos)
+   ========================================= */
+.summary-grid, .wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.card, .product-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+.card:hover, .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.card h3, .product-card h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.remove-link {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: var(--danger-color);
+}
+
+/* =========================================
+   8. Checkout (Layout Duplo)
+   ========================================= */
+.checkout-layout {
+    display: flex;
+    gap: 40px;
+}
+
+.checkout-steps {
+    flex: 2;
+}
+
+.checkout-summary {
+    flex: 1;
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    height: fit-content;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: var(--text-main);
+}
+
+.summary-total {
+    border-top: 2px solid #ddd;
+    padding-top: 20px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Radio Buttons customizados */
+.radio-option {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.radio-option:hover {
+    background-color: #f0f8ff;
+    border-color: var(--accent-color);
+}
+
+.radio-option input {
+    margin-right: 15px;
+    margin-bottom: 0; /* Override input style */
+    width: auto;
+}
+
+/* =========================================
+   9. Responsividade (Mobile)
+   ========================================= */
+@media (max-width: 768px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .checkout-layout {
+        flex-direction: column-reverse;
+    }
+    
+    .status-timeline {
+        flex-direction: column;
+        padding-left: 30px;
+    }
+    
+    .status-timeline::before {
+        top: 0;
+        bottom: 0;
+        left: 14px;
+        width: 4px;
+        height: 100%;
+    }
+    
+    .status-step {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    
+    .status-circle {
+        margin: 0 20px 0 0;
+        width: 40px;
+        height: 40px;
+        line-height: 35px;
+        flex-shrink: 0;
+    }
+}
