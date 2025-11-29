@@ -3,3 +3,5 @@ asyncpg
 pydantic
 uvicorn
 gunicorn
+pytest
+httpx

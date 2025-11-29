@@ -1,25 +1,25 @@
-# products.py
 import os
 import asyncio
 import asyncpg
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from contextlib import asynccontextmanager 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-app = FastAPI()
+# Inicializando a variavel
 _db_pool: asyncpg.pool.Pool | None = None
 
-# ---- Schemas ----
+# Schemas 
 class CategoriaIn(BaseModel):
     nome: str
 
 class ProdutoIn(BaseModel):
     nome: str
     preco: float
-    unidade: str  # e.g., "kg", "un", "g", "l"
+    unidade: str
     categoria_id: int | None = None
-    estoque: int = 0  # quantidade em estoque
+    estoque: int = 0
 
 class ProdutoUpdate(BaseModel):
     nome: str | None = None
@@ -28,14 +28,16 @@ class ProdutoUpdate(BaseModel):
     categoria_id: int | None = None
     estoque: int | None = None
 
-# ---- Startup / Shutdown (cria pool e tabelas) ----
-@app.on_event("startup")
-async def startup():
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Parte que roda ao INICIAR
     global _db_pool
+    print("Iniciando conexão com banco...")
     _db_pool = await asyncpg.create_pool(DATABASE_URL, min_size=1, max_size=10)
 
     async with _db_pool.acquire() as conn:
-        # tabelas de categorias e produtos
+        # Criação de Tabelas
         await conn.execute("""
             CREATE TABLE IF NOT EXISTS categoria (
                 id SERIAL PRIMARY KEY,
@@ -54,14 +56,14 @@ async def startup():
             );
         """)
 
-        # Inserir categorias e produtos iniciais (se não existirem)
+        # Inserir categorias iniciais
         await conn.execute("""
             INSERT INTO categoria (nome)
             SELECT v FROM (VALUES ('frutas'), ('verduras'), ('hortifruti'), ('laticinios'), ('bebidas')) AS t(v)
             ON CONFLICT (nome) DO NOTHING;
         """)
 
-        # Exemplo: inserir alguns produtos iniciais sem duplicar
+        # Inserir produtos iniciais
         await conn.execute("""
             INSERT INTO produto (nome, preco, unidade, categoria_id, estoque)
             SELECT p.nome, p.preco, p.unidade, c.id, p.estoque
@@ -78,14 +80,21 @@ async def startup():
             END
             ON CONFLICT (nome, categoria_id) DO NOTHING;
         """)
+    
+    
+    yield 
 
-@app.on_event("shutdown")
-async def shutdown():
-    global _db_pool
+    
+    print("Fechando conexão com banco...")
     if _db_pool:
         await _db_pool.close()
 
-# ---- Funções DB ----
+
+# criacao do app com lifespan
+app = FastAPI(lifespan=lifespan)
+
+
+# funcoes do db
 async def add_categoria(conn: asyncpg.Connection, c: CategoriaIn) -> int:
     row = await conn.fetchrow(
         "INSERT INTO categoria (nome) VALUES ($1) RETURNING id",
@@ -104,7 +113,6 @@ async def get_produto(conn: asyncpg.Connection, pid: int):
     return await conn.fetchrow("SELECT * FROM produto WHERE id=$1", pid)
 
 async def update_produto_db(conn: asyncpg.Connection, pid: int, u: ProdutoUpdate):
-    # construir SQL dinamicamente conforme campos presentes
     cols = []
     vals = []
     idx = 1
@@ -126,7 +134,7 @@ async def update_produto_db(conn: asyncpg.Connection, pid: int, u: ProdutoUpdate
     vals.append(pid)
     return await conn.fetchrow(sql, *vals)
 
-# ---- Endpoints categorias ----
+# Endpoints
 @app.post("/categorias")
 async def criar_categoria(payload: CategoriaIn):
     async with _db_pool.acquire() as conn:
@@ -143,11 +151,10 @@ async def listar_categorias():
         rows = await conn.fetch("SELECT id, nome FROM categoria ORDER BY nome")
         return [dict(r) for r in rows]
 
-# ---- Endpoints produtos ----
+# Endpoints produtos
 @app.post("/produtos")
 async def criar_produto(payload: ProdutoIn):
     async with _db_pool.acquire() as conn:
-        # se categoria_id fornecido, verificar existência
         if payload.categoria_id is not None:
             exists = await conn.fetchval("SELECT 1 FROM categoria WHERE id=$1", payload.categoria_id)
             if not exists:
@@ -169,7 +176,6 @@ async def listar_produtos():
             LEFT JOIN categoria c ON p.categoria_id = c.id
             ORDER BY p.id
         """)
-        # converter NUMERIC para string para evitar problemas de serialização
         return [dict(r) for r in rows]
 
 @app.get("/produtos/{produto_id}")
@@ -183,7 +189,6 @@ async def obter_produto(produto_id: int):
 @app.patch("/produtos/{produto_id}")
 async def atualizar_produto(produto_id: int, payload: ProdutoUpdate):
     async with _db_pool.acquire() as conn:
-        # se categoria_id fornecido, verificar existência
         if payload.categoria_id is not None:
             exists = await conn.fetchval("SELECT 1 FROM categoria WHERE id=$1", payload.categoria_id)
             if not exists:
@@ -202,12 +207,10 @@ async def deletar_produto(produto_id: int):
     async with _db_pool.acquire() as conn:
         async with conn.transaction():
             res = await conn.execute("DELETE FROM produto WHERE id=$1", produto_id)
-            # res é algo como 'DELETE 1' ou 'DELETE 0'
             if res.endswith(" 0"):
                 raise HTTPException(status_code=404, detail="Produto não encontrado")
     return
 
-# ---- Execução local para desenvolvimento ----
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("products:app", host="127.0.0.1", port=8001, reload=True)
