@@ -60,9 +60,10 @@
                 <form class="mt-6">
                     <!-- Botões de Ação -->
                     <div class="mt-10 flex sm:flex-col1">
-                        <button type="button" class="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">
-                            Adicionar ao Carrinho
-                        </button>
+
+                        <button type="button" id="btn-add-cart" class="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">
+    Adicionar ao Carrinho
+</button>
 
                         <button type="button" class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
                             <!-- Ícone Coração (Wishlist) -->
@@ -74,5 +75,27 @@
             </div>
         </div>
     </div>
+    <script>
+        const btnCart = document.getElementById('btn-add-cart');
+        
+        btnCart.addEventListener('click', function() {
+            // 1. Guarda o texto original para restaurar depois
+            const originalText = this.innerText;
+            
+            // 2. Muda o texto para indicar sucesso
+            this.innerHTML = 'Adicionado! <span class="ml-2">✓</span>'; // Usa innerHTML para poder por o icone se quiser
+            
+            // 3. Muda as classes de cor (Remove o Roxo/Indigo e Adiciona Verde)
+            this.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+            this.classList.add('bg-green-600', 'hover:bg-green-700', 'transition-all', 'duration-300'); // Adicionei transition para suavizar
+
+            // 4. Temporizador para voltar ao estado normal após 2 segundos
+            setTimeout(() => {
+                this.innerText = originalText;
+                this.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+                this.classList.remove('bg-green-600', 'hover:bg-green-700');
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
