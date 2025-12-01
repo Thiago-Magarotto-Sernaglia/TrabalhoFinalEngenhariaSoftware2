@@ -50,6 +50,14 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements.txt
     
+    - name: Inicializar banco de dados de testes
+      env:
+        DATABASE_URL: postgresql://user:senha@localhost:5432/meu_bd
+        TEST_DB_URL: postgresql://user:senha@localhost:5432/meu_bd
+      run: |
+        cd backend
+        python init_test_db.py
+    
     - name: Executar testes
       env:
         DATABASE_URL: postgresql://user:senha@localhost:5432/meu_bd
