@@ -52,6 +52,66 @@ Para executar o projeto, você precisa ter o Docker e o Docker Compose instalado
 *   `.env`: Arquivo de configuração com as variáveis de ambiente.
 *   `docker-compose.yml`: Orquestra os serviços de backend, frontend e banco de dados.
 
+## Desenvolvimento Local
+
+### Configuração do Ambiente
+
+1. **Crie um ambiente virtual:**
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # Linux/Mac
+   # ou
+   .venv\Scripts\activate  # Windows
+   ```
+
+2. **Instale as dependências:**
+
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   ```
+
+### Formatação e Linting
+
+O projeto utiliza **Black** para formatação automática e **Ruff** para linting.
+
+**Se os testes de formatação falharem no CI/CD, execute localmente:**
+
+```bash
+cd backend
+
+# Formatar código automaticamente
+black .
+
+# Verificar e corrigir problemas de linting
+ruff check --fix .
+
+# Verificar se está tudo ok (sem modificar arquivos)
+black --check .
+ruff check .
+```
+
+**Nota:** Sempre execute `black .` e `ruff check --fix .` antes de fazer commit para evitar falhas no CI/CD.
+
+### Executar Testes
+
+```bash
+cd backend
+
+# Executar todos os testes
+pytest
+
+# Executar testes com cobertura
+pytest --cov=. --cov-report=term
+
+# Executar testes com cobertura e gerar relatório HTML
+pytest --cov=. --cov-report=html
+# Abra htmlcov/index.html no navegador para ver o relatório
+```
+
+**Cobertura mínima:** O projeto exige **70% de cobertura de testes**. O CI/CD falhará se a cobertura estiver abaixo deste valor.
+
 ## Endpoints da API
 
 *   `POST /gerentes`: Cria um novo gerente.
