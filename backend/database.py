@@ -1,7 +1,11 @@
 import os
+
 import asyncpg
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgres://user:pass@localhost:5432/db") # Fallback para dev
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", "postgres://user:pass@localhost:5432/db"
+)  # Fallback para dev
+
 
 class Database:
     def __init__(self):
@@ -23,19 +27,24 @@ class Database:
             await self.connect()
         return self.pool.acquire()
 
+
 # Instância global para ser importada
 db = Database()
+
 
 # Função para criar tabelas iniciais (migração simplificada)
 async def init_db():
     async with db.pool.acquire() as conn:
-        await conn.execute("""
+        await conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS categoria (
                 id SERIAL PRIMARY KEY,
                 nome TEXT NOT NULL UNIQUE
             );
-        """)
-        await conn.execute("""
+        """
+        )
+        await conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS produto (
                 id SERIAL PRIMARY KEY,
                 nome TEXT NOT NULL,
@@ -45,11 +54,14 @@ async def init_db():
                 estoque INTEGER NOT NULL DEFAULT 0,
                 UNIQUE(nome, categoria_id)
             );
-        """)
-        
+        """
+        )
+
         # Seeds iniciais
-        await conn.execute("""
+        await conn.execute(
+            """
             INSERT INTO categoria (nome)
             SELECT v FROM (VALUES ('frutas'), ('verduras'), ('hortifruti')) AS t(v)
             ON CONFLICT (nome) DO NOTHING;
-        """)
+        """
+        )

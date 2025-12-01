@@ -1,10 +1,9 @@
 import os
-from typing import AsyncGenerator
-import asyncpg
-from fastapi import Depends, FastAPI, HTTPException
-from pydantic import BaseModel, EmailStr
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
+import asyncpg
+from fastapi import Depends, FastAPI, HTTPException
 
 # URL de conexão com o Postgres (ex.: postgres://user:pass@host:port/dbname)
 DATABASE_URL = os.getenv("DATABASE_URL", "postgres://postgres:password@localhost:5432/bd_soft_2")
@@ -26,28 +25,34 @@ async def lifespan(app: FastAPI):
 
     # opcional: criar tabelas iniciais (idempotente)
     async with _db_pool.acquire() as conn:
-        await conn.execute("""
+        await conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS exemplo (
                 id SERIAL PRIMARY KEY,
                 nome TEXT NOT NULL
             );
-        """)
-        await conn.execute("""
+        """
+        )
+        await conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS vendedor (
                 id SERIAL PRIMARY KEY,
                 nome TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
                 gerente_id INTEGER REFERENCES gerente(id)
             );
-        """)
-        await conn.execute("""
+        """
+        )
+        await conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS cliente (
                 id SERIAL PRIMARY KEY,
                 nome TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
                 vendedor_id INTEGER REFERENCES vendedor(id)
             );
-        """)
+        """
+        )
 
     try:
         # yield permite que a aplicação rode normalmente entre startup e shutdown
@@ -56,6 +61,7 @@ async def lifespan(app: FastAPI):
         # fecha o pool ao encerrar a aplicação
         if _db_pool:
             await _db_pool.close()
+
 
 # cria a app passando o lifespan
 app = FastAPI(lifespan=lifespan)
@@ -89,10 +95,7 @@ async def criar_item(nome: str, conn: asyncpg.Connection = Depends(get_conn)):
     Insere um registro simples e retorna o id.
     A transação é opcional; aqui usamos execute + fetchrow para retornar o id.
     """
-    row = await conn.fetchrow(
-        "INSERT INTO exemplo (nome) VALUES ($1) RETURNING id",
-        nome
-    )
+    row = await conn.fetchrow("INSERT INTO exemplo (nome) VALUES ($1) RETURNING id", nome)
     return {"id": row["id"]}
 
 
@@ -107,6 +110,7 @@ async def obter_item_por_id(item_id: int, conn: asyncpg.Connection = Depends(get
         raise HTTPException(status_code=404, detail="Item não encontrado")
     return dict(row)
 
+
 @app.get("/itens")
 async def listar_itens(conn: asyncpg.Connection = Depends(get_conn)):
     """
@@ -116,9 +120,11 @@ async def listar_itens(conn: asyncpg.Connection = Depends(get_conn)):
     rows = await conn.fetch("SELECT id, nome FROM exemplo ORDER BY id")
     return [dict(r) for r in rows]
 
+
 # -------------------------
 # Execução local (teste)
 # -------------------------
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

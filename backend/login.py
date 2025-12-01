@@ -1,11 +1,10 @@
 # main.py
-import os
 import json
+import os
 import secrets
-from typing import Optional
 
 import redis.asyncio as redis
-from fastapi import FastAPI, Depends, HTTPException, Request, Response, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from pydantic import BaseModel
 
 # Config
@@ -24,9 +23,11 @@ USERS = {
     "bob": {"password": "senha456", "role": "user", "id": 2},
 }
 
+
 class LoginIn(BaseModel):
     username: str
     password: str
+
 
 # Cria sessão no Redis e seta cookie HttpOnly
 @app.post("/login")
@@ -39,14 +40,17 @@ async def login(payload: LoginIn, response: Response):
 
     # Armazena sessão como JSON com TTL
     await r.set(session_id, json.dumps(session_data), ex=SESSION_TTL)
-    
+
     # Cookie seguro; em produção use secure=True and samesite as needed
-    response.set_cookie(SESSION_COOKIE, session_id, httponly=True, max_age=SESSION_TTL, samesite="lax")
+    response.set_cookie(
+        SESSION_COOKIE, session_id, httponly=True, max_age=SESSION_TTL, samesite="lax"
+    )
     return {"msg": "logado"}
+
 
 # Dependência que recupera sessão do Redis
 async def get_current_user(request: Request):
-    session_id: Optional[str] = request.cookies.get(SESSION_COOKIE)
+    session_id: str | None = request.cookies.get(SESSION_COOKIE)
     if not session_id:
         raise HTTPException(status_code=401, detail="Não autenticado")
     raw = await r.get(session_id)
@@ -55,23 +59,28 @@ async def get_current_user(request: Request):
     session = json.loads(raw)
     return session
 
+
 # Gerador de dependência para checar role
 def require_role(role: str):
-    async def checker(user = Depends(get_current_user)):
+    async def checker(user=Depends(get_current_user)):
         if user.get("role") != role:
             raise HTTPException(status_code=403, detail="Acesso negado")
         return user
+
     return checker
+
 
 # Rota protegida para admins
 @app.get("/admin")
-async def admin_area(user = Depends(require_role("admin"))):
+async def admin_area(user=Depends(require_role("admin"))):
     return {"msg": f"Olá {user['username']}, você é admin"}
+
 
 # Rota protegida para usuários autenticados
 @app.get("/profile")
-async def profile(user = Depends(get_current_user)):
+async def profile(user=Depends(get_current_user)):
     return {"user": user}
+
 
 # Logout: remove sessão e expira cookie
 @app.post("/logout")

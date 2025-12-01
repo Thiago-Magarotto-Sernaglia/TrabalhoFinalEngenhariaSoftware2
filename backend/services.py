@@ -1,7 +1,9 @@
-from fastapi import HTTPException
 import asyncpg
-from schemas import ProdutoIn, CategoriaIn, ProdutoUpdate
-from repositories import ProdutoRepository, CategoriaRepository
+from fastapi import HTTPException
+
+from repositories import CategoriaRepository, ProdutoRepository
+from schemas import ProdutoIn
+
 
 class ProdutoService:
     def __init__(self, db_pool: asyncpg.pool.Pool):
@@ -23,8 +25,10 @@ class ProdutoService:
                 async with conn.transaction():
                     pid = await prod_repo.create(produto)
                     return {"id": pid}
-            except asyncpg.UniqueViolationError:
-                raise HTTPException(status_code=400, detail="Produto já cadastrado na mesma categoria")
+            except asyncpg.UniqueViolationError as err:
+                raise HTTPException(
+                    status_code=400, detail="Produto já cadastrado na mesma categoria"
+                ) from err
 
     async def listar_produtos(self):
         async with self.pool.acquire() as conn:
@@ -38,5 +42,5 @@ class ProdutoService:
             if not row:
                 raise HTTPException(status_code=404, detail="Produto não encontrado")
             return dict(row)
-    
+
     # ... Métodos de update e delete seguiriam a mesma lógica ...

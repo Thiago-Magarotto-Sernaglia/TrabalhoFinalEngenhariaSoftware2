@@ -1,14 +1,13 @@
 # main.py
-import os
 import json
+import os
 import secrets
-from typing import Optional
 
 import redis.asyncio as redis
-from fastapi import FastAPI, Depends, HTTPException, Request, Response, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from passlib.hash import bcrypt
-from typing import Optional
 from pydantic import BaseModel, constr
+
 # ---------- Configurações ----------
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 SESSION_COOKIE = "session_id"
@@ -19,22 +18,27 @@ r = redis.from_url(REDIS_URL, decode_responses=True)
 
 app = FastAPI()
 
+
 # ---------- Schemas ----------
 class RegisterIn(BaseModel):
     username: constr(strip_whitespace=True, min_length=3)
-    password: constr(min_length=6) 
-    role: Optional[str] = "user"
+    password: constr(min_length=6)
+    role: str | None = "user"
+
 
 class LoginIn(BaseModel):
     username: str
     password: str
 
+
 # ---------- Helpers ----------
 def user_key(username: str) -> str:
     return f"user:{username}"
 
+
 def session_key(session_id: str) -> str:
     return f"session:{session_id}"
+
 
 # ---------- Registro (signup) ----------
 @app.post("/register", status_code=201)
@@ -62,6 +66,7 @@ async def register(payload: RegisterIn):
     }
     await r.set(key, json.dumps(user_data))
     return {"msg": "usuário criado", "username": payload.username}
+
 
 # ---------- Login (cria sessão) ----------
 @app.post("/login")
@@ -96,9 +101,10 @@ async def login(payload: LoginIn, response: Response):
     )
     return {"msg": "logado"}
 
+
 # ---------- Dependência: recupera usuário da sessão ----------
 async def get_current_user(request: Request):
-    session_id: Optional[str] = request.cookies.get(SESSION_COOKIE)
+    session_id: str | None = request.cookies.get(SESSION_COOKIE)
     if not session_id:
         raise HTTPException(status_code=401, detail="Não autenticado")
     raw = await r.get(session_key(session_id))
@@ -107,24 +113,29 @@ async def get_current_user(request: Request):
     session = json.loads(raw)
     return session
 
+
 # ---------- Dependência geradora para checar role ----------
 def require_role(role: str):
-    async def checker(user = Depends(get_current_user)):
+    async def checker(user=Depends(get_current_user)):
         if user.get("role") != role:
             raise HTTPException(status_code=403, detail="Acesso negado")
         return user
+
     return checker
+
 
 # ---------- Rotas protegidas ----------
 @app.get("/profile")
-async def profile(user = Depends(get_current_user)):
+async def profile(user=Depends(get_current_user)):
     """Retorna dados básicos do usuário logado."""
     return {"user": user}
 
+
 @app.get("/admin")
-async def admin_area(user = Depends(require_role("admin"))):
+async def admin_area(user=Depends(require_role("admin"))):
     """Rota acessível apenas para admins."""
     return {"msg": f"Olá {user['username']}, você é admin"}
+
 
 # ---------- Logout ----------
 @app.post("/logout")
