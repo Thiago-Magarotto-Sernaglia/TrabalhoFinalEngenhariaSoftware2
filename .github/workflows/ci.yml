@@ -50,6 +50,16 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements.txt
     
+    - name: Verificar formatação com Black
+      run: |
+        cd backend
+        black --check --diff .
+    
+    - name: Verificar linting com Ruff
+      run: |
+        cd backend
+        ruff check .
+    
     - name: Inicializar banco de dados de testes
       env:
         DATABASE_URL: postgresql://user:senha@localhost:5432/meu_bd
