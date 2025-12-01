@@ -4,6 +4,7 @@ pydantic
 uvicorn
 gunicorn
 pytest
+pytest-cov
 httpx
 pytest-mock
 pytest-asyncio

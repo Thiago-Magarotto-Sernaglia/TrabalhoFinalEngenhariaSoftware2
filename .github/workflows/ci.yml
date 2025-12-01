@@ -37,7 +37,7 @@ jobs:
 
     steps:
     - name: Checkout código
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     
     - name: Configurar Python
       uses: actions/setup-python@v4
@@ -58,12 +58,20 @@ jobs:
         cd backend
         python init_test_db.py
     
-    - name: Executar testes
+    - name: Executar testes com cobertura
       env:
         DATABASE_URL: postgresql://user:senha@localhost:5432/meu_bd
         REDIS_URL: redis://localhost:6379/0
         TEST_DB_URL: postgresql://user:senha@localhost:5432/meu_bd
       run: |
         cd backend
-        pytest -v
+        pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term -v
+    
+    - name: Upload relatório de cobertura (HTML)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: backend/htmlcov/
+        retention-days: 30
 

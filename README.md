@@ -1,5 +1,7 @@
 # Trabalho Final Engenharia de Software 2
 
+[![CI/CD](https://github.com/Thiago-Magarotto-Sernaglia/TrabalhoFinalEngenhariaSoftware2/actions/workflows/ci.yml/badge.svg)](https://github.com/Thiago-Magarotto-Sernaglia/TrabalhoFinalEngenhariaSoftware2/actions/workflows/ci.yml)
+
 Este projeto contém um backend em FastAPI e um frontend simples.
 
 ## Como executar com Docker
