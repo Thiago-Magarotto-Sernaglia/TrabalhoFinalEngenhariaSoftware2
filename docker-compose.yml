@@ -13,7 +13,7 @@ services:
 
   backend:
     build: ./backend
-    containner_name: backend_soft_2
+    container_name: backend_soft_2
     ports:
       - "8000:8000"
     env_file:
@@ -25,7 +25,7 @@ services:
 
   frontend:
     image: nginx:1.25-alpine
-    container_name4: frontend_soft_2
+    container_name: frontend_soft_2
     ports:
       - "8080:80"
     volumes:
@@ -33,5 +33,18 @@ services:
     depends_on:
       - backend
 
+  tests:
+    build: ./backend
+    container_name: backend_tests 
+    command: pytest
+    env_file:      
+      - .env
+    environment:
+      - TEST_DB_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}    
+    depends_on:
+      - db
+
 volumes:
   postgres_data:
+
+
