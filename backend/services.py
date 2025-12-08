@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from passlib.hash import bcrypt
 
 from repositories import CategoriaRepository, ClienteRepository, ProdutoRepository
-from schemas import ProdutoIn
+from schemas import ProdutoIn, ProdutoUpdate
 
 
 class ProdutoService:

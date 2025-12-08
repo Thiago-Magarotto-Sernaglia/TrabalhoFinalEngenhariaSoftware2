@@ -80,11 +80,11 @@ async def init_db():
         # 4. Seeds (Categorias)
         """
         INSERT INTO categoria (nome)
-        VALUES 
-            ('Eletrônicos'), 
-            ('Acessórios'), 
-            ('Computadores'), 
-            ('Smartphones'), 
+        VALUES
+            ('Eletrônicos'),
+            ('Acessórios'),
+            ('Computadores'),
+            ('Smartphones'),
             ('Games')
         ON CONFLICT (nome) DO NOTHING;
         """,
