@@ -74,5 +74,98 @@
             </div>
         </div>
     </div>
+<script>
+    // Variável global para guardar o produto atual
+    let produtoAtual = null;
+
+    async function carregarDetalhes() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const produtoId = urlParams.get('id');
+
+        if (!produtoId) {
+            alert('Produto não especificado.');
+            window.location.href = 'produtos.html';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8000/produtos/${produtoId}`);
+            if (!response.ok) throw new Error('Produto não encontrado');
+
+            produtoAtual = await response.json();
+
+            // 1. Atualiza Textos Básicos
+            document.title = `${produtoAtual.nome} - Sua Loja`;
+            document.querySelector('h1.text-3xl').textContent = produtoAtual.nome;
+            
+            const precoFormatado = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(produtoAtual.preco);
+            document.querySelector('p.text-3xl.text-indigo-600').textContent = precoFormatado;
+
+            // Atualiza Breadcrumb
+            const breadcrumbs = document.querySelectorAll('nav ol li');
+            if(breadcrumbs.length > 2) breadcrumbs[2].textContent = produtoAtual.nome;
+
+            // 2. Lógica de Estoque (NOVO)
+            const estoqueDiv = document.querySelector('.mt-6'); // Reutilizando a div da descrição para mostrar estoque
+            
+            // Cria um elemento visual para o estoque
+            const statusEstoque = document.createElement('p');
+            statusEstoque.className = "mt-4 font-bold flex items-center";
+            
+            const btnComprar = document.querySelector('button[type="button"]'); // O primeiro botão
+
+            if (produtoAtual.estoque > 0) {
+                statusEstoque.innerHTML = `<span class="text-green-600">✓ Em estoque (${produtoAtual.estoque} ${produtoAtual.unidade})</span>`;
+                // Ativa o clique do botão
+                btnComprar.onclick = adicionarAoCarrinho;
+            } else {
+                statusEstoque.innerHTML = `<span class="text-red-600">⚠ Esgotado</span>`;
+                // Desabilita o botão
+                btnComprar.disabled = true;
+                btnComprar.classList.add('opacity-50', 'cursor-not-allowed');
+                btnComprar.textContent = "Indisponível";
+            }
+            
+            estoqueDiv.appendChild(statusEstoque);
+
+        } catch (error) {
+            console.error(error);
+            document.body.innerHTML = '<div class="text-center mt-20 text-red-600">Erro ao carregar produto. Verifique se o backend está rodando.</div>';
+        }
+    }
+
+    // 3. Função de Adicionar ao Carrinho (NOVO)
+    function adicionarAoCarrinho() {
+        if (!produtoAtual) return;
+
+        // Pega o carrinho atual do LocalStorage ou cria um array vazio
+        let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+        // Verifica se o produto já está no carrinho
+        const itemExistente = carrinho.find(item => item.id === produtoAtual.id);
+
+        if (itemExistente) {
+            itemExistente.qtd += 1; // Aumenta quantidade
+        } else {
+            carrinho.push({
+                id: produtoAtual.id,
+                nome: produtoAtual.nome,
+                preco: produtoAtual.preco,
+                imagem: null, // Seu banco ainda não tem imagem, deixamos null
+                qtd: 1
+            });
+        }
+
+        // Salva de volta no navegador
+        localStorage.setItem('carrinho', JSON.stringify(carrinho));
+
+        alert(`"${produtoAtual.nome}" adicionado ao carrinho!`);
+        
+        // Opcional: Redirecionar para o carrinho
+        // window.location.href = 'carrinho.html'; 
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarDetalhes);
+</script>
 </body>
 </html>

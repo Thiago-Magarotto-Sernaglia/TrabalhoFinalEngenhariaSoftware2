@@ -10,34 +10,46 @@
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
-    <!-- Navbar -->
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <!-- Logo -->
                 <a href="index.html" class="text-2xl font-bold text-indigo-600">SuaLogo</a>
 
-                <!-- Menu Desktop -->
                 <div class="hidden md:flex space-x-8">
                     <a href="index.html" class="text-gray-900 font-medium hover:text-indigo-600">Início</a>
                     <a href="produtos.html" class="text-gray-500 hover:text-indigo-600">Produtos</a>
                     <a href="#" class="text-gray-500 hover:text-indigo-600">Sobre</a>
                 </div>
 
-                <!-- Ícones / Login -->
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-6">
+                    
                     <a href="carrinho.html" class="text-gray-500 hover:text-indigo-600 relative">
                         <span class="sr-only">Carrinho</span>
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </a>
-                    <a href="login.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
-                    <a href="cadastrar.html" class="hidden sm:inline-flex px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Criar conta</a>
+
+                    <div id="menu-visitante" class="flex items-center space-x-4">
+                        <a href="login.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
+                        <a href="cadastrar.html" class="hidden sm:inline-flex px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Criar conta</a>
+                    </div>
+
+                    <div id="menu-usuario" class="hidden flex items-center space-x-4">
+                        <span class="text-sm text-gray-700">Olá, <strong id="user-name">Cliente</strong></span>
+                        
+                        <a href="minha_conta.html" class="text-gray-500 hover:text-indigo-600" title="Minha Conta">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </a>
+
+                        <button onclick="logout()" class="text-sm text-red-500 hover:text-red-700 font-medium ml-2">
+                            Sair
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <div class="relative bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
@@ -62,55 +74,117 @@
             </div>
         </div>
         <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 bg-gray-100 flex items-center justify-center">
-            <!-- Placeholder para imagem de banner -->
             <span class="text-gray-400 font-bold text-xl">[Imagem Banner Hero]</span>
         </div>
     </div>
 
-    <!-- Seção de Destaques -->
     <section class="bg-gray-50 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Produtos em Destaque</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <!-- Card Produto 1 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition">
-                    <div class="h-48 bg-gray-200 flex items-center justify-center">
-                        <span class="text-gray-400 text-sm">Imagem</span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-sm font-medium text-gray-900">Headphone Pro</h3>
-                        <p class="mt-1 text-sm text-gray-500">Áudio de alta fidelidade</p>
-                        <p class="mt-2 text-lg font-bold text-indigo-600">R$ 299,00</p>
-                        <a href="produto_detalhe.html" class="mt-3 block w-full text-center bg-gray-100 text-gray-800 text-sm font-medium py-2 rounded hover:bg-gray-200">Ver Detalhes</a>
-                    </div>
-                </div>
-
-                <!-- Card Produto 2 -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition">
-                    <div class="h-48 bg-gray-200 flex items-center justify-center">
-                        <span class="text-gray-400 text-sm">Imagem</span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-sm font-medium text-gray-900">Smartwatch X</h3>
-                        <p class="mt-1 text-sm text-gray-500">Monitore sua saúde</p>
-                        <p class="mt-2 text-lg font-bold text-indigo-600">R$ 450,00</p>
-                        <a href="produto_detalhe.html" class="mt-3 block w-full text-center bg-gray-100 text-gray-800 text-sm font-medium py-2 rounded hover:bg-gray-200">Ver Detalhes</a>
-                    </div>
-                </div>
-
-                <!-- Mais cards... -->
-
+            
+            <div id="destaques-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <p class="col-span-full text-center text-gray-500 py-10">Carregando novidades...</p>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 mt-auto">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <p class="text-center text-sm text-gray-400">&copy; 2023 Sua Loja. Todos os direitos reservados.</p>
         </div>
     </footer>
+
+    <script>
+        const API_URL = "http://localhost:8000";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            verificarSessao();
+            carregarDestaques();
+        });
+
+        // 1. Função para buscar produtos e exibir na Home
+        async function carregarDestaques() {
+            const container = document.getElementById('destaques-grid');
+
+            try {
+                const response = await fetch(`${API_URL}/produtos`);
+                if (!response.ok) throw new Error('Erro ao buscar produtos');
+
+                const produtos = await response.json();
+
+                container.innerHTML = ''; // Limpa o "Carregando..."
+
+                if (produtos.length === 0) {
+                    container.innerHTML = '<p class="col-span-full text-center text-gray-500">Nenhum produto em destaque no momento.</p>';
+                    return;
+                }
+
+                // Pega apenas os 4 primeiros produtos para exibir na Home
+                const destaques = produtos.slice(0, 4);
+
+                destaques.forEach(prod => {
+                    const preco = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(prod.preco);
+                    
+                    const card = document.createElement('div');
+                    card.className = "bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition flex flex-col justify-between";
+                    
+                    card.innerHTML = `
+                        <div class="h-48 bg-gray-200 flex items-center justify-center">
+                            <span class="text-gray-400 text-sm">Imagem</span>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="text-sm font-medium text-gray-900 line-clamp-1" title="${prod.nome}">${prod.nome}</h3>
+                            <p class="mt-1 text-xs text-gray-500">${prod.categoria_nome || 'Geral'}</p>
+                            <p class="mt-2 text-lg font-bold text-indigo-600">${preco}</p>
+                            
+                            <div class="mt-auto pt-3">
+                                <a href="produto_detalhe.html?id=${prod.id}" class="block w-full text-center bg-gray-100 text-gray-800 text-sm font-medium py-2 rounded hover:bg-gray-200 transition">
+                                    Ver Detalhes
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = '<p class="col-span-full text-center text-red-500">Não foi possível carregar os destaques.</p>';
+            }
+        }
+
+        // 2. Lógica de Sessão (Mantida da versão anterior)
+        function verificarSessao() {
+            const usuarioJson = localStorage.getItem('usuario');
+            const menuVisitante = document.getElementById('menu-visitante');
+            const menuUsuario = document.getElementById('menu-usuario');
+            const userNameSpan = document.getElementById('user-name');
+
+            if (usuarioJson) {
+                try {
+                    const usuario = JSON.parse(usuarioJson);
+                    const primeiroNome = usuario.nome.split(' ')[0];
+                    userNameSpan.textContent = primeiroNome;
+
+                    menuVisitante.classList.add('hidden');
+                    menuUsuario.classList.remove('hidden');
+                } catch (e) {
+                    console.error("Erro sessão", e);
+                    logout();
+                }
+            } else {
+                menuVisitante.classList.remove('hidden');
+                menuUsuario.classList.add('hidden');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('usuario');
+            // Remove itens do carrinho ao deslogar? Opcional.
+            // localStorage.removeItem('carrinho'); 
+            window.location.reload();
+        }
+    </script>
 
 </body>
 </html>

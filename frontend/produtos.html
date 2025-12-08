@@ -54,53 +54,86 @@
 
             <!-- Grid de Produtos -->
             <div class="mt-6 lg:mt-0 lg:col-span-3">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div id="lista-produtos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     
-                    <!-- Produto Exemplo -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                        <a href="produto_detalhe.html">
-                            <div class="h-48 bg-gray-200 w-full flex items-center justify-center">
-                                <span class="text-gray-400 text-sm">Imagem</span>
-                            </div>
-                        </a>
-                        <div class="p-4">
-                            <h3 class="text-lg font-medium text-gray-900">
-                                <a href="produto_detalhe.html">Notebook Gamer</a>
-                            </h3>
-                            <p class="mt-1 text-sm text-gray-500">Potência máxima</p>
-                            <div class="mt-4 flex items-center justify-between">
-                                <span class="text-xl font-bold text-indigo-600">R$ 4.500</span>
-                                <button class="p-2 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Repetir cards conforme necessário -->
-                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                        <a href="produto_detalhe.html">
-                            <div class="h-48 bg-gray-200 w-full flex items-center justify-center">
-                                <span class="text-gray-400 text-sm">Imagem</span>
-                            </div>
-                        </a>
-                        <div class="p-4">
-                            <h3 class="text-lg font-medium text-gray-900">
-                                <a href="produto_detalhe.html">Mouse Wireless</a>
-                            </h3>
-                            <p class="mt-1 text-sm text-gray-500">Ergonômico e rápido</p>
-                            <div class="mt-4 flex items-center justify-between">
-                                <span class="text-xl font-bold text-indigo-600">R$ 150</span>
-                                <button class="p-2 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <p class="text-gray-500 col-span-3 text-center py-10">Carregando produtos...</p>
 
                 </div>
             </div>
         </div>
     </div>
+<script>
+    async function carregarProdutos() {
+        const container = document.getElementById('lista-produtos');
+
+        try {
+            // Requisição ao Backend (Porta 8000)
+            const response = await fetch('http://localhost:8000/produtos');
+            
+            if (!response.ok) {
+                throw new Error('Erro ao buscar produtos');
+            }
+
+            const produtos = await response.json();
+
+            // Limpa o aviso de "Carregando..."
+            container.innerHTML = '';
+
+            if (produtos.length === 0) {
+                container.innerHTML = '<p class="text-center col-span-3">Nenhum produto encontrado.</p>';
+                return;
+            }
+
+            // Para cada produto vindo do banco, cria o HTML
+            produtos.forEach(produto => {
+                // Formatação de preço (BRL)
+                const precoFormatado = new Intl.NumberFormat('pt-BR', { 
+                    style: 'currency', 
+                    currency: 'BRL' 
+                }).format(produto.price || produto.preco); // Verifique se seu backend usa 'price' ou 'preco'
+
+                // Template String com o design original
+                const cardHTML = `
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition flex flex-col justify-between">
+                        <a href="produto_detalhe.html?id=${produto.id}">
+                            <div class="h-48 bg-gray-200 w-full flex items-center justify-center">
+                                ${produto.imagem 
+                                    ? `<img src="${produto.imagem}" alt="${produto.name}" class="h-full w-full object-cover">` 
+                                    : `<span class="text-gray-400 text-sm">Sem Imagem</span>`
+                                }
+                            </div>
+                        </a>
+                        <div class="p-4">
+                            <h3 class="text-lg font-medium text-gray-900">
+                                <a href="produto_detalhe.html?id=${produto.id}">${produto.name || produto.nome}</a>
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-500">${produto.description || 'Sem descrição'}</p>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-xl font-bold text-indigo-600">${precoFormatado}</span>
+                                <button onclick="adicionarAoCarrinho(${produto.id})" class="p-2 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML += cardHTML;
+            });
+
+        } catch (error) {
+            console.error('Erro:', error);
+            container.innerHTML = '<p class="text-red-500 text-center col-span-3">Erro ao carregar produtos. Verifique se o backend está rodando.</p>';
+        }
+    }
+
+    // Função dummy para o botão (implementaremos o carrinho real depois)
+    function adicionarAoCarrinho(id) {
+        alert(`Produto ${id} adicionado ao carrinho (Simulação)`);
+    }
+
+    // Inicia o carregamento assim que a página abre
+    document.addEventListener('DOMContentLoaded', carregarProdutos);
+</script>
 </body>
 </html>

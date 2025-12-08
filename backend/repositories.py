@@ -86,3 +86,19 @@ class ProdutoRepository:
         sql = "UPDATE produto SET " + ", ".join(cols) + f" WHERE id = ${idx} RETURNING *"
         vals.append(pid)
         return await self.conn.fetchrow(sql, *vals)
+    
+class ClienteRepository:
+    def __init__(self, conn: asyncpg.Connection):
+        self.conn = conn
+
+    async def create(self, nome: str, email: str, senha_hash: str) -> int:
+        row = await self.conn.fetchrow(
+            "INSERT INTO cliente (nome, email, senha_hash) VALUES ($1, $2, $3) RETURNING id",
+            nome,
+            email,
+            senha_hash,
+        )
+        return row["id"]
+
+    async def get_by_email(self, email: str):
+        return await self.conn.fetchrow("SELECT * FROM cliente WHERE email=$1", email)

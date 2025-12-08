@@ -4,87 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Conta - Nosso Sistema</title>
-    
-    <!-- 1. Carregando TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 2. Carregando a fonte Inter (preferida pelo Tailwind) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- 3. Definindo a fonte padrão no body -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    <style> body { font-family: 'Inter', sans-serif; } </style>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Container principal que centraliza o conteúdo -->
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             
-            <!-- Card do formulário -->
             <div class="bg-white p-8 sm:p-10 rounded-lg shadow-lg">
                 
-                <!-- Cabeçalho -->
                 <div class="text-center">
-                    <!-- Você pode trocar "SuaLogo" por uma tag <img> com seu logo -->
-                    <h1 class="text-3xl font-bold text-gray-900">
-                        SuaLogo
-                    </h1>
-                    <h2 class="mt-4 text-2xl font-semibold text-gray-800">
-                        Crie sua conta
-                    </h2>
-                    <p class="mt-2 text-sm text-gray-600">
-                        Rápido e fácil, vamos começar.
-                    </p>
+                    <h1 class="text-3xl font-bold text-gray-900">SuaLogo</h1>
+                    <h2 class="mt-4 text-2xl font-semibold text-gray-800">Crie sua conta</h2>
+                    <p class="mt-2 text-sm text-gray-600">Rápido e fácil, vamos começar.</p>
                 </div>
 
-                <!-- Formulário de Cadastro -->
-                <!-- A história de usuário pedia: Nome, E-mail e Senha -->
-                <form id="registerForm" class="mt-8 space-y-6" action="#" method="POST">
-                    <input type="hidden" name="remember" value="true">
+                <form id="registerForm" class="mt-8 space-y-6">
                     
                     <div class="rounded-md shadow-sm space-y-5">
-                        
-                        <!-- Campo: Nome Completo -->
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700">Nome Completo</label>
-                            <input id="name" name="name" type="text" autocomplete="name" required
-                                   class="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            <input id="name" name="name" type="text" required
+                                   class="appearance-none block w-full px-4 py-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                    placeholder="Seu nome completo">
                         </div>
                         
-                        <!-- Campo: E-mail -->
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
-                            <input id="email" name="email" type="email" autocomplete="email" required
-                                   class="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            <input id="email" name="email" type="email" required
+                                   class="appearance-none block w-full px-4 py-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                    placeholder="seu.email@exemplo.com">
                         </div>
                         
-                        <!-- Campo: Senha -->
                         <div>
                             <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-                            <input id="password" name="password" type="password" autocomplete="new-password" required
-                                   class="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            <input id="password" name="password" type="password" required
+                                   class="appearance-none block w-full px-4 py-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                    placeholder="Mínimo 8 caracteres">
                         </div>
                         
-                        <!-- Campo: Confirmar Senha (Boa prática) -->
                         <div>
                             <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
-                            <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" required
-                                   class="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            <input id="confirm-password" name="confirm-password" type="password" required
+                                   class="appearance-none block w-full px-4 py-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                    placeholder="Repita sua senha">
                         </div>
                     </div>
 
-                    <!-- Mensagem de erro ou sucesso -->
-                    <div id="message" class="text-sm text-center"></div>
+                    <div id="message" class="text-sm text-center font-medium hidden"></div>
 
-                    <!-- Botão de Cadastro -->
                     <div>
                         <button type="submit"
                                 class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
@@ -93,13 +63,12 @@
                     </div>
                 </form>
 
-            </div><!-- Fim do Card -->
+            </div>
 
-            <!-- Link para Login -->
             <div class="text-center">
                 <p class="text-sm text-gray-600">
                     Já tem uma conta?
-                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                    <a href="login.html" class="font-medium text-indigo-600 hover:text-indigo-500">
                         Faça login
                     </a>
                 </p>
@@ -109,49 +78,87 @@
     </div>
 
     <script>
-        // Script de validação (frontend)
         const form = document.getElementById('registerForm');
-        const password = document.getElementById('password');
-        const confirmPassword = document.getElementById('confirm-password');
-        const message = document.getElementById('message');
+        const messageBox = document.getElementById('message');
+        const API_URL = "http://localhost:8000";
 
-        form.addEventListener('submit', function(e) {
-            // Previne o envio real do formulário
-            e.preventDefault(); 
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Limpa mensagens anteriores
-            message.textContent = '';
-            message.className = 'text-sm text-center';
+            // Reset visual
+            messageBox.classList.add('hidden');
+            messageBox.className = 'text-sm text-center font-medium hidden';
+            
+            const btn = form.querySelector('button');
+            const originalBtnText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Cadastrando...';
 
-            // 1. Validação: Senhas coincidem?
-            if (password.value !== confirmPassword.value) {
-                message.textContent = 'As senhas não coincidem. Tente novamente.';
-                message.classList.add('text-red-600');
-                
-                // Foca no campo de confirmação
-                confirmPassword.focus();
+            // Dados
+            const nome = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('password').value;
+            const confirmSenha = document.getElementById('confirm-password').value;
+
+            // Validação Local
+            if (senha !== confirmSenha) {
+                mostrarErro('As senhas não coincidem.');
+                resetBotao(btn, originalBtnText);
                 return;
             }
 
-            // 2. Validação: Senha forte (exemplo simples)
-            if (password.value.length < 8) {
-                message.textContent = 'Sua senha deve ter pelo menos 8 caracteres.';
-                message.classList.add('text-red-600');
-                password.focus();
+            if (senha.length < 3) { // Regra simples, pode aumentar
+                mostrarErro('A senha é muito curta.');
+                resetBotao(btn, originalBtnText);
                 return;
             }
 
-            // 3. Sucesso (Simulação)
-            message.textContent = 'Cadastro realizado com sucesso! (Isso é uma simulação)';
-            message.classList.add('text-green-600');
-            
-            // Aqui você enviaria os dados para o backend
-            // Ex: fetch('/api/register', { method: 'POST', body: ... })
-            
-            // Desabilita o botão para evitar cliques duplos
-            form.querySelector('button').disabled = true;
-            form.querySelector('button').textContent = 'Processando...';
+            // Envio para API
+            try {
+                const response = await fetch(`${API_URL}/clientes`, { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // O backend espera: nome, email, senha (conforme definido no Pydantic em main.py)
+                    body: JSON.stringify({ nome, email, senha })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    mostrarSucesso('Cadastro realizado! Redirecionando...');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1500);
+                } else {
+                    // Exibe erro vindo da API (ex: "E-mail já cadastrado")
+                    throw new Error(result.detail || 'Erro ao cadastrar.');
+                }
+
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarErro(error.message);
+                resetBotao(btn, originalBtnText);
+            }
         });
+
+        function mostrarErro(texto) {
+            messageBox.textContent = texto;
+            messageBox.className = 'text-sm text-center font-medium text-red-600 mt-4 block bg-red-50 p-2 rounded';
+            messageBox.classList.remove('hidden');
+        }
+
+        function mostrarSucesso(texto) {
+            messageBox.textContent = texto;
+            messageBox.className = 'text-sm text-center font-medium text-green-600 mt-4 block bg-green-50 p-2 rounded';
+            messageBox.classList.remove('hidden');
+        }
+
+        function resetBotao(btn, textoOriginal) {
+            btn.disabled = false;
+            btn.textContent = textoOriginal;
+        }
     </script>
 
 </body>

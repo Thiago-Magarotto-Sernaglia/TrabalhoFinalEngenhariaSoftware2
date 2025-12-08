@@ -7,9 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -20,32 +18,26 @@
             <div class="bg-white p-8 sm:p-10 rounded-lg shadow-lg">
                 
                 <div class="text-center">
-                    <h1 class="text-3xl font-bold text-gray-900">
-                        SuaLogo
-                    </h1>
-                    <h2 class="mt-4 text-2xl font-semibold text-gray-800">
-                        Entre na sua conta
-                    </h2>
-                    <p class="mt-2 text-sm text-gray-600">
-                        Bem-vindo de volta!
-                    </p>
+                    <h1 class="text-3xl font-bold text-gray-900">SuaLogo</h1>
+                    <h2 class="mt-4 text-2xl font-semibold text-gray-800">Entre na sua conta</h2>
+                    <p class="mt-2 text-sm text-gray-600">Bem-vindo de volta!</p>
                 </div>
 
-                <form id="loginForm" class="mt-8 space-y-6" action="#" method="POST">
+                <form id="loginForm" class="mt-8 space-y-6">
                     
                     <div class="rounded-md shadow-sm space-y-5">
                         
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
-                            <input id="email" name="email" type="email" autocomplete="email" required
-                                   class="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            <input id="email" name="email" type="email" required
+                                   class="appearance-none block w-full px-4 py-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                    placeholder="seu.email@exemplo.com">
                         </div>
                         
                         <div>
                             <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-                            <input id="password" name="password" type="password" autocomplete="current-password" required
-                                   class="appearance-none relative block w-full px-4 py-3 mt-1 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            <input id="password" name="password" type="password" required
+                                   class="appearance-none block w-full px-4 py-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                    placeholder="Sua senha">
                         </div>
                     </div>
@@ -60,13 +52,13 @@
                         </div>
 
                         <div class="text-sm">
-                            <a href="esqueci-minha-senha.html" class="font-medium text-indigo-600 hover:text-indigo-500">
+                            <a href="esqueci_minha_senha.html" class="font-medium text-indigo-600 hover:text-indigo-500">
                                 Esqueceu a senha?
                             </a>
                         </div>
                     </div>
 
-                    <div id="message" class="text-sm text-center text-red-600"></div>
+                    <div id="message" class="text-sm text-center font-medium hidden"></div>
 
                     <div>
                         <button type="submit"
@@ -91,28 +83,61 @@
     </div>
 
     <script>
-        // Simulação de login
         const form = document.getElementById('loginForm');
-        const message = document.getElementById('message');
+        const messageBox = document.getElementById('message');
+        const API_URL = "http://localhost:8000";
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault(); 
             
+            // Reset visual
+            messageBox.classList.add('hidden');
+            const btn = form.querySelector('button');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Verificando...';
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Simulação de erro simples
-            if (password.length < 8) {
-                message.textContent = 'E-mail ou senha inválidos. (Simulação)';
-            } else {
-                message.textContent = '';
-                // Simulação de sucesso
-                form.querySelector('button').textContent = 'Redirecionando...';
-                form.querySelector('button').disabled = true;
-                
-                // Em um app real, você redirecionaria para /minha-conta
-                console.log('Login simulado com sucesso para:', email);
-                // window.location.href = '/minha-conta'; 
+            try {
+                // 1. Envia requisição para o Backend
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // 2. SUCESSO
+                    messageBox.textContent = 'Login realizado! Redirecionando...';
+                    messageBox.className = 'text-sm text-center font-medium text-green-600 bg-green-50 p-2 rounded block';
+                    
+                    // 3. Salva o usuário no navegador (localStorage)
+                    // Isso permite saber quem está logado nas outras páginas
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
+                    // Redireciona
+                    setTimeout(() => {
+                        // Se você quiser criar lógica de admin futuramente, verificaria data.usuario.role aqui
+                        // Por enquanto mandamos todos para a home
+                        window.location.href = 'index.html'; 
+                    }, 1000);
+
+                } else {
+                    // 4. ERRO (Senha errada ou usuário não existe)
+                    throw new Error(data.detail || 'Falha no login.');
+                }
+
+            } catch (error) {
+                console.error(error);
+                messageBox.textContent = error.message;
+                messageBox.className = 'text-sm text-center font-medium text-red-600 bg-red-50 p-2 rounded block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
             }
         });
     </script>

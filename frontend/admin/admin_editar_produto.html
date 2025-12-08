@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Produto - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+        <div class="mb-6 flex items-center justify-between">
+            <h1 class="text-3xl font-bold text-gray-900">Editar Produto</h1>
+            <a href="admin_produtos.html" class="text-indigo-600 hover:text-indigo-800 font-medium">
+                &larr; Voltar para Lista
+            </a>
+        </div>
+
+        <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+            <div class="p-6 sm:p-10">
+                <form id="formEditar" class="space-y-6">
+                    
+                    <div>
+                        <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
+                        <input type="text" id="nome" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-2">
+                            <label for="preco" class="block text-sm font-medium text-gray-700">Preço</label>
+                            <input type="number" id="preco" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label for="estoque" class="block text-sm font-medium text-gray-700">Estoque</label>
+                            <input type="number" id="estoque" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label for="unidade" class="block text-sm font-medium text-gray-700">Unidade</label>
+                            <select id="unidade" class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3">
+                                <option value="un">Unidade (un)</option>
+                                <option value="kg">Quilograma (kg)</option>
+                                <option value="l">Litro (l)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="mensagem" class="hidden text-center text-sm font-bold"></div>
+
+                    <div class="flex justify-end pt-5">
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:8000";
+        const urlParams = new URLSearchParams(window.location.search);
+        const produtoId = urlParams.get('id');
+
+        // 1. Carregar dados do produto ao abrir
+        async function carregarDados() {
+            if (!produtoId) {
+                alert("ID do produto inválido.");
+                window.location.href = "admin_produtos.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/produtos/${produtoId}`);
+                if (!response.ok) throw new Error("Produto não encontrado");
+                
+                const prod = await response.json();
+
+                // Preenche os campos
+                document.getElementById('nome').value = prod.nome;
+                document.getElementById('preco').value = prod.preco;
+                document.getElementById('estoque').value = prod.estoque;
+                document.getElementById('unidade').value = prod.unidade;
+
+            } catch (error) {
+                alert("Erro ao carregar produto: " + error.message);
+                window.location.href = "admin_produtos.html";
+            }
+        }
+
+        // 2. Salvar Edição
+        document.getElementById('formEditar').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const msg = document.getElementById('mensagem');
+            
+            btn.disabled = true;
+            btn.textContent = "Salvando...";
+
+            const dadosAtualizados = {
+                nome: document.getElementById('nome').value,
+                preco: parseFloat(document.getElementById('preco').value),
+                estoque: parseInt(document.getElementById('estoque').value),
+                unidade: document.getElementById('unidade').value
+                // categoria_id: opcional, se quiser implementar
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/produtos/${produtoId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosAtualizados)
+                });
+
+                if (response.ok) {
+                    msg.textContent = "Produto atualizado com sucesso!";
+                    msg.className = "text-green-600 block text-center mt-4";
+                    setTimeout(() => window.location.href = "admin_produtos.html", 1500);
+                } else {
+                    throw new Error("Erro ao atualizar");
+                }
+            } catch (error) {
+                msg.textContent = "Erro ao salvar.";
+                msg.className = "text-red-600 block text-center mt-4";
+                btn.disabled = false;
+                btn.textContent = "Salvar Alterações";
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', carregarDados);
+    </script>
+</body>
+</html>

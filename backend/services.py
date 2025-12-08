@@ -1,6 +1,7 @@
 import asyncpg
 from fastapi import HTTPException
-
+from repositories import ClienteRepository
+from passlib.hash import bcrypt
 from repositories import CategoriaRepository, ProdutoRepository
 from schemas import ProdutoIn
 
@@ -42,5 +43,57 @@ class ProdutoService:
             if not row:
                 raise HTTPException(status_code=404, detail="Produto não encontrado")
             return dict(row)
+    async def atualizar_produto(self, pid: int, dados: "ProdutoUpdate"):
+        async with self.pool.acquire() as conn:
+            repo = ProdutoRepository(conn)
+            # O repositório retorna a linha atualizada ou None se não achar
+            atualizado = await repo.update(pid, dados)
+            
+            if not atualizado:
+                raise HTTPException(status_code=404, detail="Produto não encontrado")
+            
+            return dict(atualizado)
+
+    async def deletar_produto(self, pid: int):
+        async with self.pool.acquire() as conn:
+            repo = ProdutoRepository(conn)
+            sucesso = await repo.delete(pid)
+            
+            if not sucesso:
+                raise HTTPException(status_code=404, detail="Produto não encontrado")
+            
+            return {"msg": "Produto removido com sucesso"}
+
+class ClienteService:
+    def __init__(self, db_pool: asyncpg.pool.Pool):
+        self.pool = db_pool
+
+    async def criar_cliente(self, nome: str, email: str, senha: str):
+        async with self.pool.acquire() as conn:
+            repo = ClienteRepository(conn)
+            
+            # Verifica se já existe
+            if await repo.get_by_email(email):
+                 raise HTTPException(status_code=400, detail="E-mail já cadastrado.")
+
+            # Hash da senha
+            senha_hash = bcrypt.hash(senha)
+            
+            # Salva
+            cliente_id = await repo.create(nome, email, senha_hash)
+            return {"id": cliente_id, "msg": "Cliente criado com sucesso"}
+
+    async def autenticar(self, email: str, senha: str):
+        async with self.pool.acquire() as conn:
+            repo = ClienteRepository(conn)
+            user = await repo.get_by_email(email)
+            
+            if not user:
+                raise HTTPException(status_code=401, detail="E-mail ou senha inválidos")
+            
+            if not bcrypt.verify(senha, user['senha_hash']):
+                raise HTTPException(status_code=401, detail="E-mail ou senha inválidos")
+                
+            return {"id": user['id'], "nome": user['nome'], "email": user['email']}
 
     # ... Métodos de update e delete seguiriam a mesma lógica ...

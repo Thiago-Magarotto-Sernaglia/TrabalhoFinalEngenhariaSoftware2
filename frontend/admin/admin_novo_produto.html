@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Produto - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+        
+        <div class="mb-6 flex items-center justify-between">
+            <h1 class="text-3xl font-bold text-gray-900">Cadastrar Novo Produto</h1>
+            <a href="admin_produtos.html" class="text-indigo-600 hover:text-indigo-800 font-medium">
+                &larr; Voltar para Lista
+            </a>
+        </div>
+
+        <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+            <div class="p-6 sm:p-10">
+                <form id="formProduto" class="space-y-6">
+                    
+                    <div>
+                        <label for="nome" class="block text-sm font-medium text-gray-700">Nome do Produto</label>
+                        <input type="text" name="nome" id="nome" required
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-2">
+                            <label for="preco" class="block text-sm font-medium text-gray-700">Preço (R$)</label>
+                            <input type="number" name="preco" id="preco" step="0.01" min="0" required
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="estoque" class="block text-sm font-medium text-gray-700">Estoque Inicial</label>
+                            <input type="number" name="estoque" id="estoque" min="0" required
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="unidade" class="block text-sm font-medium text-gray-700">Unidade</label>
+                            <select id="unidade" name="unidade" class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="un">Unidade (un)</option>
+                                <option value="kg">Quilograma (kg)</option>
+                                <option value="l">Litro (l)</option>
+                                <option value="cx">Caixa (cx)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="categoria_id" class="block text-sm font-medium text-gray-700">Categoria</label>
+                        <select id="categoria_id" name="categoria_id" required
+                                class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="">Carregando categorias...</option>
+                        </select>
+                        <p class="mt-2 text-xs text-gray-500">As categorias vêm direto do banco de dados.</p>
+                    </div>
+
+                    <div id="mensagem" class="text-center text-sm font-medium hidden"></div>
+
+                    <div class="pt-5 border-t border-gray-200">
+                        <div class="flex justify-end">
+                            <a href="admin_produtos.html" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Salvar Produto
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:8000"; // Ajuste se necessário
+
+        // 1. Carregar Categorias ao Iniciar
+        async function carregarCategorias() {
+            const select = document.getElementById('categoria_id');
+            try {
+                const response = await fetch(`${API_URL}/categorias`);
+                const categorias = await response.json();
+                
+                select.innerHTML = '<option value="">Selecione uma categoria...</option>';
+                
+                categorias.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat.id;
+                    option.textContent = cat.nome;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar categorias:", error);
+                select.innerHTML = '<option value="">Erro ao carregar</option>';
+            }
+        }
+
+        // 2. Enviar Formulário
+        document.getElementById('formProduto').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            const msg = document.getElementById('mensagem');
+            const originalText = btn.textContent;
+            
+            btn.disabled = true;
+            btn.textContent = "Salvando...";
+            msg.classList.add('hidden');
+
+            // Monta o objeto JSON
+            const produto = {
+                nome: document.getElementById('nome').value,
+                preco: parseFloat(document.getElementById('preco').value),
+                estoque: parseInt(document.getElementById('estoque').value),
+                unidade: document.getElementById('unidade').value,
+                categoria_id: parseInt(document.getElementById('categoria_id').value)
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/produtos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(produto)
+                });
+
+                if (response.ok) {
+                    msg.textContent = "Produto cadastrado com sucesso!";
+                    msg.className = "text-center text-sm font-medium text-green-600 mt-4 block";
+                    
+                    // Limpa o form
+                    e.target.reset();
+                    
+                    // Opcional: Voltar para a lista após 1.5s
+                    setTimeout(() => window.location.href = 'admin_produtos.html', 1500);
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || "Erro ao salvar");
+                }
+            } catch (error) {
+                msg.textContent = "Erro: " + error.message;
+                msg.className = "text-center text-sm font-medium text-red-600 mt-4 block";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+
+        // Inicia o carregamento
+        document.addEventListener('DOMContentLoaded', carregarCategorias);
+    </script>
+</body>
+</html>
