@@ -7,8 +7,7 @@ class CategoriaRepository:
 
     async def create(self, categoria: CategoriaIn) -> int:
         row = await self.conn.fetchrow(
-            "INSERT INTO categoria (nome) VALUES ($1) RETURNING id",
-            categoria.nome
+            "INSERT INTO categoria (nome) VALUES ($1) RETURNING id", categoria.nome
         )
         return row["id"]
 
@@ -19,6 +18,7 @@ class CategoriaRepository:
     async def exists_by_id(self, cat_id: int) -> bool:
         return await self.conn.fetchval("SELECT 1 FROM categoria WHERE id=$1", cat_id)
 
+
 class ProdutoRepository:
     def __init__(self, conn: asyncpg.Connection):
         self.conn = conn
@@ -26,18 +26,20 @@ class ProdutoRepository:
     async def create(self, p: ProdutoIn) -> int:
         row = await self.conn.fetchrow(
             "INSERT INTO produto (nome, preco, unidade, categoria_id, estoque) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-            p.nome, p.preco, p.unidade, p.categoria_id, p.estoque
+            p.nome, p.preco, p.unidade, p.categoria_id, p.estoque,
         )
         return row["id"]
 
     async def list_all(self):
-        rows = await self.conn.fetch("""
+        rows = await self.conn.fetch(
+            """
             SELECT p.id, p.nome, p.preco::text AS preco, p.unidade, p.estoque,
                    c.id AS categoria_id, c.nome AS categoria_nome
             FROM produto p
             LEFT JOIN categoria c ON p.categoria_id = c.id
             ORDER BY p.id
-        """)
+            """
+        )
         return [dict(r) for r in rows]
 
     async def get_by_id(self, pid: int):
@@ -45,7 +47,7 @@ class ProdutoRepository:
 
     async def delete(self, pid: int) -> bool:
         res = await self.conn.execute("DELETE FROM produto WHERE id=$1", pid)
-        return not res.endswith(" 0") # Retorna True se deletou algo
+        return not res.endswith(" 0")
 
     async def update(self, pid: int, u: ProdutoUpdate):
         cols = []
@@ -62,9 +64,45 @@ class ProdutoRepository:
         if u.estoque is not None:
             cols.append(f"estoque = ${idx}"); vals.append(u.estoque); idx += 1
 
-        if not cols:
-            return await self.get_by_id(pid)
+        if not cols: return await self.get_by_id(pid)
 
         sql = "UPDATE produto SET " + ", ".join(cols) + f" WHERE id = ${idx} RETURNING *"
         vals.append(pid)
         return await self.conn.fetchrow(sql, *vals)
+
+
+class ClienteRepository:
+    def __init__(self, conn: asyncpg.Connection):
+        self.conn = conn
+
+    async def create(self, nome: str, email: str, senha_hash: str) -> int:
+        row = await self.conn.fetchrow(
+            "INSERT INTO cliente (nome, email, senha_hash) VALUES ($1, $2, $3) RETURNING id",
+            nome, email, senha_hash,
+        )
+        return row["id"]
+
+    async def get_by_email(self, email: str):
+        return await self.conn.fetchrow("SELECT * FROM cliente WHERE email=$1", email)
+
+class AdminRepository:
+    def __init__(self, conn: asyncpg.Connection):
+        self.conn = conn
+
+    async def create(self, nome: str, email: str, senha_hash: str) -> int:
+        row = await self.conn.fetchrow(
+            "INSERT INTO administrador (nome, email, senha_hash) VALUES ($1, $2, $3) RETURNING id",
+            nome, email, senha_hash,
+        )
+        return row["id"]
+
+    async def get_by_email(self, email: str):
+        return await self.conn.fetchrow("SELECT * FROM administrador WHERE email=$1", email)
+
+    async def list_all(self):
+        rows = await self.conn.fetch("SELECT id, nome, email FROM administrador ORDER BY id")
+        return [dict(r) for r in rows]
+
+    async def delete(self, admin_id: int) -> bool:
+        res = await self.conn.execute("DELETE FROM administrador WHERE id=$1", admin_id)
+        return not res.endswith(" 0")

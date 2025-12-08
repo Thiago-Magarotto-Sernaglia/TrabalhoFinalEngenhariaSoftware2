@@ -1,7 +1,9 @@
+import asyncio
 import os
 import asyncpg
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgres://user:pass@localhost:5432/db") # Fallback para dev
+DATABASE_URL = os.getenv("DATABASE_URL", "postgres://user:pass@localhost:5432/db")
+
 
 class Database:
     def __init__(self):
@@ -9,8 +11,21 @@ class Database:
 
     async def connect(self):
         if not self.pool:
-            self.pool = await asyncpg.create_pool(DATABASE_URL, min_size=1, max_size=10)
-            print("Conexão com o banco estabelecida.")
+            max_retries = 5
+            for attempt in range(1, max_retries + 1):
+                try:
+                    print(f"Tentando conectar ao banco (Tentativa {attempt}/{max_retries})...")
+                    self.pool = await asyncpg.create_pool(DATABASE_URL, min_size=1, max_size=10)
+                    print("✅ Conexão com o banco estabelecida com sucesso.")
+                    return
+                except (OSError, asyncpg.CannotConnectNowError, ConnectionRefusedError) as e:
+                    if attempt == max_retries:
+                        print(
+                            f"❌ Falha crítica: Não foi possível conectar ao banco após {max_retries} tentativas."
+                        )
+                        raise e
+                    print("⚠️ Banco ainda não está pronto. Aguardando 3 segundos...")
+                    await asyncio.sleep(3)
 
     async def disconnect(self):
         if self.pool:
@@ -18,38 +33,83 @@ class Database:
             print("Conexão com o banco encerrada.")
 
     async def get_connection(self):
-        # Helper para usar em contextos manuais se necessário
         if not self.pool:
             await self.connect()
         return self.pool.acquire()
 
-# Instância global para ser importada
+
+# Instância global
 db = Database()
 
-# Função para criar tabelas iniciais (migração simplificada)
+
 async def init_db():
+    """
+    Executa os comandos SQL um a um, tratando erros de concorrência.
+    Isso evita que múltiplos workers quebrem ao tentar criar a mesma tabela simultaneamente.
+    """
+    commands = [
+        # 1. Tabela Categoria
+        """
+        CREATE TABLE IF NOT EXISTS categoria (
+            id SERIAL PRIMARY KEY,
+            nome TEXT NOT NULL UNIQUE
+        );
+        """,
+        # 2. Tabela Produto
+        """
+        CREATE TABLE IF NOT EXISTS produto (
+            id SERIAL PRIMARY KEY,
+            nome TEXT NOT NULL,
+            preco NUMERIC NOT NULL,
+            unidade TEXT NOT NULL,
+            categoria_id INTEGER REFERENCES categoria(id),
+            estoque INTEGER NOT NULL DEFAULT 0,
+            UNIQUE(nome, categoria_id)
+        );
+        """,
+        # 3. Tabela Cliente
+        """
+        CREATE TABLE IF NOT EXISTS cliente (
+            id SERIAL PRIMARY KEY,
+            nome TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            senha_hash TEXT NOT NULL
+        );
+        """,
+        # 4. Tabela Administrador (NOVO)
+        """
+        CREATE TABLE IF NOT EXISTS administrador (
+            id SERIAL PRIMARY KEY,
+            nome TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            senha_hash TEXT NOT NULL
+        );
+        """,
+        # 5. Seeds (Categorias)
+        """
+        INSERT INTO categoria (nome)
+        VALUES
+            ('Eletrônicos'),
+            ('Acessórios'),
+            ('Computadores'),
+            ('Smartphones'),
+            ('Games')
+        ON CONFLICT (nome) DO NOTHING;
+        """,
+        # 6. Seed Admin Inicial (NOVO - Senha: admin123)
+        """
+        INSERT INTO administrador (nome, email, senha_hash)
+        VALUES ('Super Admin', 'admin@techmarket.com', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWrn96pzvKpJQ7apKen4P.9fdzy1y.')
+        ON CONFLICT (email) DO NOTHING;
+        """,
+    ]
+
     async with db.pool.acquire() as conn:
-        await conn.execute("""
-            CREATE TABLE IF NOT EXISTS categoria (
-                id SERIAL PRIMARY KEY,
-                nome TEXT NOT NULL UNIQUE
-            );
-        """)
-        await conn.execute("""
-            CREATE TABLE IF NOT EXISTS produto (
-                id SERIAL PRIMARY KEY,
-                nome TEXT NOT NULL,
-                preco NUMERIC NOT NULL,
-                unidade TEXT NOT NULL,
-                categoria_id INTEGER REFERENCES categoria(id),
-                estoque INTEGER NOT NULL DEFAULT 0,
-                UNIQUE(nome, categoria_id)
-            );
-        """)
-        
-        # Seeds iniciais
-        await conn.execute("""
-            INSERT INTO categoria (nome)
-            SELECT v FROM (VALUES ('frutas'), ('verduras'), ('hortifruti')) AS t(v)
-            ON CONFLICT (nome) DO NOTHING;
-        """)
+        for sql in commands:
+            try:
+                await conn.execute(sql)
+            except (asyncpg.UniqueViolationError, asyncpg.DuplicateTableError):
+                # Se der erro de duplicidade, ignora (outro worker já criou)
+                pass
+            except Exception as e:
+                print(f"Erro ao executar SQL de inicialização: {e}")

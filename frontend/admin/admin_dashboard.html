@@ -12,176 +12,90 @@
 
     <div class="flex h-screen overflow-hidden">
 
-        <!-- Sidebar (Menu Lateral) -->
         <aside class="w-64 bg-gray-900 text-white flex flex-col fixed h-full transition-all duration-300 z-30 hidden md:flex">
             <div class="h-16 flex items-center justify-center border-b border-gray-800">
                 <h1 class="text-xl font-bold tracking-wider">ADMIN PAINEL</h1>
             </div>
 
             <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+                
                 <a href="admin_dashboard.html" class="flex items-center px-4 py-3 bg-indigo-600 rounded-md text-white group">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     Dashboard
                 </a>
-                
-                <a href="admin_produtos.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors">
+
+                <a href="admin_produtos.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                     Produtos e Estoque
                 </a>
 
-                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors">
+                <a href="admin_usuarios.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 rounded-md">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    Usuários e Permissões
-                </a>
-
-                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    Relatórios Financeiros
+                    Administradores
                 </a>
                 
-                <div class="mt-8 border-t border-gray-800 pt-4">
-                     <h3 class="px-4 text-xs uppercase text-gray-500 font-semibold mb-2">Sistema</h3>
-                     <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-md transition-colors">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                        Logs de Erros
-                    </a>
+                <div class="p-4 border-t border-gray-800 absolute bottom-0 w-full">
+                    <button onclick="logout()" class="flex items-center text-gray-400 hover:text-white transition-colors w-full">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        Sair
+                    </button>
                 </div>
             </nav>
-
-            <div class="p-4 border-t border-gray-800">
-                <a href="login.html" class="flex items-center text-gray-400 hover:text-white transition-colors">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                    Sair
-                </a>
-            </div>
         </aside>
 
-        <!-- Área Principal -->
         <div class="flex-1 flex flex-col md:ml-64 transition-all duration-300">
-            
-            <!-- Topbar Mobile -->
             <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6 md:justify-end">
-                <button class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
                 <div class="flex items-center">
                     <span class="text-sm text-gray-600 mr-2">Olá, <strong>Administrador</strong></span>
-                    <div class="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">
-                        A
-                    </div>
+                    <div class="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">A</div>
                 </div>
             </header>
 
-            <!-- Conteúdo -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-                
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Visão Geral</h2>
-
-                <!-- Cards de Estatísticas -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <!-- Faturamento -->
-                    <div class="bg-white rounded-lg shadow p-5 border-l-4 border-green-500">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-green-100 p-3 rounded-full text-green-600">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Faturamento Mensal</p>
-                                <p class="text-xl font-bold text-gray-900">R$ 45.200,00</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Usuários -->
-                    <div class="bg-white rounded-lg shadow p-5 border-l-4 border-indigo-500">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-indigo-100 p-3 rounded-full text-indigo-600">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Novos Usuários</p>
-                                <p class="text-xl font-bold text-gray-900">1,204</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pedidos Pendentes -->
-                    <div class="bg-white rounded-lg shadow p-5 border-l-4 border-yellow-500">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-yellow-100 p-3 rounded-full text-yellow-600">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Pedidos Pendentes</p>
-                                <p class="text-xl font-bold text-gray-900">15</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Alerta Estoque -->
-                    <div class="bg-white rounded-lg shadow p-5 border-l-4 border-red-500">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-red-100 p-3 rounded-full text-red-600">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Estoque Baixo</p>
-                                <p class="text-xl font-bold text-gray-900">3 Itens</p>
-                            </div>
-                        </div>
-                    </div>
+                     <div class="bg-white rounded-lg shadow p-5 border-l-4 border-green-500">
+                        <div class="ml-4"><p class="text-sm text-gray-500">Valor em Estoque</p><p id="stat-valor" class="text-xl font-bold">R$ 0,00</p></div>
+                     </div>
+                     <div class="bg-white rounded-lg shadow p-5 border-l-4 border-indigo-500">
+                        <div class="ml-4"><p class="text-sm text-gray-500">Clientes</p><p id="stat-clientes" class="text-xl font-bold">0</p></div>
+                     </div>
+                     <div class="bg-white rounded-lg shadow p-5 border-l-4 border-blue-500">
+                        <div class="ml-4"><p class="text-sm text-gray-500">Produtos</p><p id="stat-produtos" class="text-xl font-bold">0</p></div>
+                     </div>
+                     <div class="bg-white rounded-lg shadow p-5 border-l-4 border-red-500">
+                        <div class="ml-4"><p class="text-sm text-gray-500">Estoque Baixo</p><p id="stat-alerta" class="text-xl font-bold">0</p></div>
+                     </div>
                 </div>
-
-                <!-- Tabela de Pedidos Recentes -->
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900">Últimos Pedidos</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12346</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Maria Oliveira</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/10/2023</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ 4.650,00</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Em Transporte</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Detalhes</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12345</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">João Silva</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">14/10/2023</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">R$ 150,00</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Entregue</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Detalhes</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </main>
         </div>
     </div>
 
+    <script>
+        function logout() {
+            localStorage.removeItem('admin_user');
+            window.location.href = 'admin_login.html';
+        }
+
+        async function carregarDashboard() {
+            try {
+                const response = await fetch('http://localhost:8000/dashboard/stats');
+                if (!response.ok) throw new Error('Erro ao carregar estatísticas');
+                const stats = await response.json();
+
+                document.getElementById('stat-clientes').textContent = stats.total_clientes;
+                document.getElementById('stat-produtos').textContent = stats.total_produtos;
+                
+                const elAlerta = document.getElementById('stat-alerta');
+                elAlerta.textContent = stats.estoque_baixo;
+                if (stats.estoque_baixo > 0) elAlerta.classList.add('text-red-600');
+
+                const valorFormatado = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.valor_inventario);
+                document.getElementById('stat-valor').textContent = valorFormatado;
+            } catch (error) {
+                console.error("Falha no dashboard:", error);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', carregarDashboard);
+    </script>
 </body>
 </html>
