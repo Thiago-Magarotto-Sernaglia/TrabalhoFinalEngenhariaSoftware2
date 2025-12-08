@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sobre nós | Loja Sem... Nome</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style> body { font-family: 'Inter', sans-serif; } </style>
+  <meta name="description" content="Conheça a história, missão, valores e compromissos da Loja Exemplo. Transparência, qualidade, entrega eficiente e suporte humano." />
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Navbar (mesma estrutura da página de produtos) -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <a href="index.html" class="text-2xl font-bold text-indigo-600">SuaLogo</a>
+        <div class="flex items-center space-x-4">
+          <a href="carrinho.html" class="text-gray-500 hover:text-indigo-600 relative">
+            <span class="sr-only">Carrinho</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          </a>
+          <a href="login.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Conteúdo principal com grid igual à página de produtos -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="lg:grid lg:grid-cols-4 lg:gap-x-8">
+
+      <!-- Sidebar (reaproveitando estrutura de filtros/categorias) -->
+      <aside class="hidden lg:block">
+        <h3 class="text-lg font-medium text-gray-900">Categorias</h3>
+        <ul class="mt-4 space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
+          <li><a href="/produtos" class="text-indigo-600">Todos</a></li>
+          <li><a href="/produtos?cat=eletronicos" class="text-gray-500 hover:text-indigo-600">Eletrônicos</a></li>
+          <li><a href="/produtos?cat=acessorios" class="text-gray-500 hover:text-indigo-600">Acessórios</a></li>
+          <li><a href="/produtos?cat=computadores" class="text-gray-500 hover:text-indigo-600">Computadores</a></li>
+        </ul>
+
+        <h3 class="text-lg font-medium text-gray-900 mt-6">Atalhos</h3>
+        <div class="mt-4 space-y-2 text-sm text-gray-600">
+          <div class="flex items-center">
+            <a href="/contato" class="text-gray-500 hover:text-indigo-600">Fale conosco</a>
+          </div>
+          <div class="flex items-center">
+            <a href="/politica-privacidade" class="text-gray-500 hover:text-indigo-600">Política de privacidade</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Área principal do "Sobre" (usa a mesma coluna principal da página de produtos) -->
+      <div class="mt-6 lg:mt-0 lg:col-span-3">
+        <!-- Introdução -->
+        <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h1 class="text-2xl font-bold text-gray-900">Sobre nós</h1>
+          <p class="mt-3 text-sm text-gray-600">Somos um e‑commerce brasileiro dedicado a oferecer produtos selecionados com preços justos, entrega eficiente e suporte humano. Acreditamos que comprar online deve ser simples, seguro e agradável.</p>
+        </section>
+
+        <!-- Missão -->
+        <section id="missao" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h2 class="text-lg font-medium text-gray-900">Nossa missão</h2>
+          <p class="mt-3 text-sm text-gray-600">Facilitar o acesso a produtos de qualidade com uma experiência de compra clara, confiável e acolhedora. Trabalhamos para que cada pedido chegue no prazo, cada atendimento resolva de verdade e cada cliente se sinta respeitado.</p>
+        </section>
+
+        <!-- História -->
+        <section id="historia" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h2 class="text-lg font-medium text-gray-900">Nossa história</h2>
+          <p class="mt-3 text-sm text-gray-600">Nascemos da vontade de simplificar compras online. Começamos pequenos, com poucos itens e muita atenção ao atendimento. Crescemos com o boca a boca de quem recebeu no prazo, foi bem tratado e decidiu voltar. Hoje ampliamos nosso mix de produtos mantendo o mesmo cuidado: ouvir, melhorar e entregar.</p>
+        </section>
+
+        <!-- Valores (lista em card) -->
+        <section id="valores" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h2 class="text-lg font-medium text-gray-900">Valores</h2>
+          <ul class="mt-4 space-y-3 text-sm text-gray-600">
+            <li><strong class="text-gray-900">Transparência:</strong> informações claras sobre preço, prazo e política de trocas.</li>
+            <li><strong class="text-gray-900">Qualidade:</strong> produtos avaliados e fornecedores verificados.</li>
+            <li><strong class="text-gray-900">Responsabilidade:</strong> logística eficiente e menor impacto ambiental.</li>
+            <li><strong class="text-gray-900">Respeito ao cliente:</strong> atendimento rápido e honesto.</li>
+            <li><strong class="text-gray-900">Melhoria contínua:</strong> aprendemos com feedbacks para evoluir sempre.</li>
+          </ul>
+        </section>
+
+        <!-- Como selecionamos produtos e logística lado a lado em grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <section id="como-selecionamos" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900">Como selecionamos produtos</h3>
+            <ul class="mt-4 space-y-3 text-sm text-gray-600">
+              <li><strong class="text-gray-900">Curadoria:</strong> análise de qualidade, garantia e reputação do fornecedor.</li>
+              <li><strong class="text-gray-900">Preços justos:</strong> negociações transparentes para equilibrar custo e valor.</li>
+              <li><strong class="text-gray-900">Feedback real:</strong> revisão contínua com base em avaliações de clientes.</li>
+            </ul>
+          </section>
+
+          <section id="logistica" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900">Logística e prazos</h3>
+            <ul class="mt-4 space-y-3 text-sm text-gray-600">
+              <li><strong class="text-gray-900">Parceiros confiáveis:</strong> transportadoras com SLA e rastreio.</li>
+              <li><strong class="text-gray-900">Rastreio:</strong> código enviado ao cliente e acompanhamento em tempo real.</li>
+              <li><strong class="text-gray-900">Embalagem segura:</strong> proteção adequada e identificação discreta.</li>
+            </ul>
+          </section>
+        </div>
+
+        <!-- Segurança e Trocas -->
+        <section id="seguranca" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h3 class="text-lg font-medium text-gray-900">Segurança e privacidade</h3>
+          <p class="mt-3 text-sm text-gray-600">Protegemos sua navegação e seus dados com criptografia em todo o site e políticas alinhadas à LGPD. Utilizamos antifraude, tokenização de pagamentos e monitoramento de acessos para prevenir usos indevidos. Você controla suas preferências e pode solicitar exclusão de dados quando desejar.</p>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <section id="trocas" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900">Trocas e devoluções</h3>
+            <ul class="mt-4 space-y-3 text-sm text-gray-600">
+              <li><strong class="text-gray-900">Até 7 dias:</strong> direito de arrependimento conforme o Código de Defesa do Consumidor.</li>
+              <li><strong class="text-gray-900">Itens com defeito:</strong> suporte via garantia do fabricante.</li>
+              <li><strong class="text-gray-900">Processo simples:</strong> solicitação pelo painel do cliente ou contato direto.</li>
+            </ul>
+          </section>
+
+          <section id="por-que-comprar" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900">Por que comprar conosco</h3>
+            <ul class="mt-4 space-y-3 text-sm text-gray-600">
+              <li><strong class="text-gray-900">Transparência:</strong> políticas claras e comunicação objetiva.</li>
+              <li><strong class="text-gray-900">Entrega rápida:</strong> compromisso com prazos e acompanhamento do pedido.</li>
+              <li><strong class="text-gray-900">Suporte humano:</strong> pessoas de verdade, prontas para ouvir e resolver.</li>
+            </ul>
+          </section>
+        </div>
+
+        <!-- Contato -->
+        <section id="contato" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h3 class="text-lg font-medium text-gray-900">Fale com a gente</h3>
+          <address class="mt-3 not-italic text-sm text-gray-600 space-y-2">
+            <p><strong class="text-gray-900">E‑mail:</strong> suporte@lojaexemplo.com</p>
+            <p><strong class="text-gray-900">WhatsApp:</strong> (00) 00000‑0000</p>
+            <p><strong class="text-gray-900">Horário:</strong> segunda a sexta, 9h–18h (BRT)</p>
+            <p><strong class="text-gray-900">Endereço:</strong> Rua Exemplo, 123 — São Paulo, SP</p>
+            <p><strong class="text-gray-900">CNPJ:</strong> 00.000.000/0001‑00</p>
+          </address>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer (estilo alinhado com a página de produtos) -->
+  <footer class="bg-white border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <p class="text-sm text-gray-600">© Loja Exemplo — Todos os direitos reservados.</p>
+      <p class="text-sm text-gray-600 mt-1">Termos de uso • Política de privacidade</p>
+    </div>
+  </footer>
+
+</body>
+</html>
