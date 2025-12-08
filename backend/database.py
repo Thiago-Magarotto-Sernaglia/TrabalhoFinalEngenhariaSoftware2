@@ -1,8 +1,10 @@
-import os
 import asyncio
+import os
+
 import asyncpg
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgres://user:pass@localhost:5432/db")
+
 
 class Database:
     def __init__(self):
@@ -19,9 +21,11 @@ class Database:
                     return
                 except (OSError, asyncpg.CannotConnectNowError, ConnectionRefusedError) as e:
                     if attempt == max_retries:
-                        print(f"❌ Falha crítica: Não foi possível conectar ao banco após {max_retries} tentativas.")
+                        print(
+                            f"❌ Falha crítica: Não foi possível conectar ao banco após {max_retries} tentativas."
+                        )
                         raise e
-                    print(f"⚠️ Banco ainda não está pronto. Aguardando 3 segundos...")
+                    print("⚠️ Banco ainda não está pronto. Aguardando 3 segundos...")
                     await asyncio.sleep(3)
 
     async def disconnect(self):
@@ -34,8 +38,10 @@ class Database:
             await self.connect()
         return self.pool.acquire()
 
+
 # Instância global
 db = Database()
+
 
 async def init_db():
     """
@@ -50,7 +56,6 @@ async def init_db():
             nome TEXT NOT NULL UNIQUE
         );
         """,
-        
         # 2. Tabela Produto
         """
         CREATE TABLE IF NOT EXISTS produto (
@@ -63,7 +68,6 @@ async def init_db():
             UNIQUE(nome, categoria_id)
         );
         """,
-
         # 3. Tabela Cliente
         """
         CREATE TABLE IF NOT EXISTS cliente (
@@ -73,7 +77,6 @@ async def init_db():
             senha_hash TEXT NOT NULL
         );
         """,
-
         # 4. Seeds (Categorias)
         """
         INSERT INTO categoria (nome)
@@ -84,7 +87,7 @@ async def init_db():
             ('Smartphones'), 
             ('Games')
         ON CONFLICT (nome) DO NOTHING;
-        """
+        """,
     ]
 
     async with db.pool.acquire() as conn:

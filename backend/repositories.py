@@ -86,7 +86,8 @@ class ProdutoRepository:
         sql = "UPDATE produto SET " + ", ".join(cols) + f" WHERE id = ${idx} RETURNING *"
         vals.append(pid)
         return await self.conn.fetchrow(sql, *vals)
-    
+
+
 class ClienteRepository:
     def __init__(self, conn: asyncpg.Connection):
         self.conn = conn
