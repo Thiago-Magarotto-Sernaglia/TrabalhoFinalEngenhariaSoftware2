@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style> body { font-family: 'Inter', sans-serif; } </style>
+    <script src="js/auth.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
@@ -20,7 +21,14 @@
                         <span class="sr-only">Carrinho</span>
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </a>
-                    <a href="login.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
+                    <div id="menu-visitante">
+                        <a href="login.html" id="nav-login" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
+                    </div>
+                    <div id="menu-usuario" class="hidden flex items-center space-x-4">
+                        <span id="nav-user" class="text-sm text-gray-700"></span>
+                        <a href="minha_conta.html" class="text-sm text-gray-500 hover:text-indigo-600">Minha Conta</a>
+                        <button id="btn-logout" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Sair</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,11 +94,12 @@
 
             // Para cada produto vindo do banco, cria o HTML
             produtos.forEach(produto => {
-                // Formatação de preço (BRL)
+                // Formatação de preço (BRL) - backend retorna 'preco'
+                const preco = parseFloat(produto.preco || 0);
                 const precoFormatado = new Intl.NumberFormat('pt-BR', { 
                     style: 'currency', 
                     currency: 'BRL' 
-                }).format(produto.price || produto.preco); // Verifique se seu backend usa 'price' ou 'preco'
+                }).format(preco);
 
                 // Template String com o design original
                 const cardHTML = `
@@ -98,16 +107,16 @@
                         <a href="produto_detalhe.html?id=${produto.id}">
                             <div class="h-48 bg-gray-200 w-full flex items-center justify-center">
                                 ${produto.imagem 
-                                    ? `<img src="${produto.imagem}" alt="${produto.name}" class="h-full w-full object-cover">` 
+                                    ? `<img src="${produto.imagem}" alt="${produto.nome}" class="h-full w-full object-cover">` 
                                     : `<span class="text-gray-400 text-sm">Sem Imagem</span>`
                                 }
                             </div>
                         </a>
                         <div class="p-4">
                             <h3 class="text-lg font-medium text-gray-900">
-                                <a href="produto_detalhe.html?id=${produto.id}">${produto.name || produto.nome}</a>
+                                <a href="produto_detalhe.html?id=${produto.id}">${produto.nome}</a>
                             </h3>
-                            <p class="mt-1 text-sm text-gray-500">${produto.description || 'Sem descrição'}</p>
+                            <p class="mt-1 text-sm text-gray-500">${produto.unidade || 'Sem descrição'}</p>
                             <div class="mt-4 flex items-center justify-between">
                                 <span class="text-xl font-bold text-indigo-600">${precoFormatado}</span>
                                 <button onclick="adicionarAoCarrinho(${produto.id})" class="p-2 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
@@ -127,13 +136,49 @@
         }
     }
 
-    // Função dummy para o botão (implementaremos o carrinho real depois)
-    function adicionarAoCarrinho(id) {
-        alert(`Produto ${id} adicionado ao carrinho (Simulação)`);
+    // Função para adicionar produto ao carrinho
+    async function adicionarAoCarrinho(id) {
+        try {
+            // Busca os detalhes do produto da API
+            const response = await fetch(`http://localhost:8000/produtos/${id}`);
+            if (!response.ok) {
+                throw new Error('Erro ao buscar produto');
+            }
+            const produto = await response.json();
+
+            // Pega o carrinho atual do LocalStorage ou cria um array vazio
+            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+            // Verifica se o produto já está no carrinho
+            const itemExistente = carrinho.find(item => item.id === produto.id);
+
+            if (itemExistente) {
+                itemExistente.qtd += 1; // Aumenta quantidade
+            } else {
+                carrinho.push({
+                    id: produto.id,
+                    nome: produto.nome,
+                    preco: parseFloat(produto.preco),
+                    imagem: null,
+                    qtd: 1
+                });
+            }
+
+            // Salva de volta no navegador
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+
+            alert(`"${produto.nome}" adicionado ao carrinho!`);
+        } catch (error) {
+            console.error('Erro ao adicionar ao carrinho:', error);
+            alert('Erro ao adicionar produto ao carrinho. Tente novamente.');
+        }
     }
 
     // Inicia o carregamento assim que a página abre
-    document.addEventListener('DOMContentLoaded', carregarProdutos);
+    document.addEventListener('DOMContentLoaded', async () => {
+        await initAuth(); // Inicializa sistema de autenticação
+        carregarProdutos();
+    });
 </script>
 </body>
 </html>

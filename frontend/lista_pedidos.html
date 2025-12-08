@@ -87,8 +87,33 @@
         /* FontAwesome for icons */
         @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
     </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/auth.js"></script>
 </head>
 <body>
+    <!-- Navbar com autenticação -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html" class="text-2xl font-bold text-indigo-600">SuaLogo</a>
+                <div class="flex items-center space-x-4">
+                    <a href="carrinho.html" class="text-gray-500 hover:text-indigo-600 relative">
+                        <span class="sr-only">Carrinho</span>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </a>
+                    <div id="menu-visitante">
+                        <a href="login.html" id="nav-login" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
+                    </div>
+                    <div id="menu-usuario" class="hidden flex items-center space-x-4">
+                        <span id="nav-user" class="text-sm text-gray-700"></span>
+                        <a href="minha_conta.html" class="text-sm text-gray-500 hover:text-indigo-600">Minha Conta</a>
+                        <button id="btn-logout" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Sair</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <h1><i class="fas fa-boxes"></i> Meus Pedidos</h1>
         <p>Visualize o status e os detalhes de todos os seus pedidos recentes e anteriores.</p>
@@ -103,39 +128,109 @@
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="pedidos-tbody">
                 <tr>
-                    <td>#12345</td>
-                    <td>15/11/2025</td>
-                    <td><span class="status-badge status-entregue">Entregue</span></td>
-                    <td>R$ 159,90</td>
-                    <td><a href="/minha-conta/pedidos/12345"><i class="fas fa-eye"></i> Ver Detalhes</a></td>
-                </tr>
-                <tr>
-                    <td>#67890</td>
-                    <td>20/11/2025</td>
-                    <td><span class="status-badge status-transporte">Em Transporte</span></td>
-                    <td>R$ 299,50</td>
-                    <td><a href="/minha-conta/pedidos/67890"><i class="fas fa-truck"></i> Acompanhar</a></td>
-                </tr>
-                <tr>
-                    <td>#11223</td>
-                    <td>01/12/2025</td>
-                    <td><span class="status-badge status-preparacao">Em Preparação</span></td>
-                    <td>R$ 89,00</td>
-                    <td><a href="/minha-conta/pedidos/11223"><i class="fas fa-eye"></i> Ver Detalhes</a></td>
-                </tr>
-                <tr>
-                    <td>#44556</td>
-                    <td>05/10/2025</td>
-                    <td><span class="status-badge status-pendente">Cancelado</span></td>
-                    <td>R$ 50,00</td>
-                    <td><a href="/minha-conta/pedidos/44556"><i class="fas fa-eye"></i> Ver Detalhes</a></td>
+                    <td colspan="5" class="text-center text-gray-500">Carregando pedidos...</td>
                 </tr>
             </tbody>
         </table>
         
-        <p style="margin-top: 30px;"><a href="/minha-conta" style="color: #3498db; text-decoration: none; font-weight: bold;"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a></p>
+        <p style="margin-top: 30px;"><a href="index.html" style="color: #3498db; text-decoration: none; font-weight: bold;"><i class="fas fa-arrow-left"></i> Voltar ao Início</a></p>
     </div>
+
+    <script>
+        function formatarPreco(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        function obterClasseStatus(status) {
+            const statusMap = {
+                'Entregue': 'status-entregue',
+                'Em Transporte': 'status-transporte',
+                'Em Preparação': 'status-preparacao',
+                'Cancelado': 'status-pendente',
+                'Pendente': 'status-pendente'
+            };
+            return statusMap[status] || 'status-pendente';
+        }
+
+        function carregarPedidos() {
+            const tbody = document.getElementById('pedidos-tbody');
+            const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+
+            if (pedidos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center text-gray-500">
+                            <p style="padding: 20px;">Você ainda não realizou nenhum pedido.</p>
+                            <a href="produtos.html" style="color: #3498db; text-decoration: none; font-weight: bold;">
+                                <i class="fas fa-shopping-bag"></i> Começar a comprar
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = '';
+
+            pedidos.forEach(pedido => {
+                const tr = document.createElement('tr');
+                const statusClass = obterClasseStatus(pedido.status);
+                
+                tr.innerHTML = `
+                    <td>#${pedido.id}</td>
+                    <td>${pedido.data}</td>
+                    <td><span class="status-badge ${statusClass}">${pedido.status}</span></td>
+                    <td>${formatarPreco(pedido.total)}</td>
+                    <td>
+                        <a href="#" onclick="verDetalhes(${pedido.id}); return false;" style="color: #3498db; text-decoration: none; font-weight: bold;">
+                            <i class="fas fa-eye"></i> Ver Detalhes
+                        </a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function verDetalhes(pedidoId) {
+            const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+            const pedido = pedidos.find(p => p.id === pedidoId);
+            
+            if (!pedido) {
+                alert('Pedido não encontrado!');
+                return;
+            }
+
+            let detalhes = `Pedido #${pedido.id}\n\n`;
+            detalhes += `Data: ${pedido.data}\n`;
+            detalhes += `Status: ${pedido.status}\n\n`;
+            detalhes += `Endereço de Entrega:\n`;
+            detalhes += `${pedido.endereco.rua}, ${pedido.endereco.numero}\n`;
+            detalhes += `CEP: ${pedido.endereco.cep}\n`;
+            if (pedido.endereco.complemento) {
+                detalhes += `Complemento: ${pedido.endereco.complemento}\n`;
+            }
+            detalhes += `\nFrete: ${pedido.frete === 'sedex' ? 'Sedex' : 'PAC'}\n`;
+            detalhes += `Método de Pagamento: ${pedido.metodo_pagamento === 'cartao' ? 'Cartão' : pedido.metodo_pagamento === 'pix' ? 'PIX' : 'Boleto'}\n\n`;
+            detalhes += `Itens:\n`;
+            pedido.itens.forEach(item => {
+                detalhes += `- ${item.nome} x${item.qtd} - ${formatarPreco(item.preco * item.qtd)}\n`;
+            });
+            detalhes += `\nSubtotal: ${formatarPreco(pedido.subtotal)}\n`;
+            detalhes += `Frete: ${formatarPreco(pedido.frete_valor)}\n`;
+            detalhes += `Total: ${formatarPreco(pedido.total)}`;
+
+            alert(detalhes);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initAuth(); // Inicializa sistema de autenticação
+            carregarPedidos();
+        });
+    </script>
 </body>
 </html>

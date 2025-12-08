@@ -6,6 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style> body { font-family: 'Inter', sans-serif; } </style>
+    <script src="js/auth.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
@@ -13,6 +14,16 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <a href="index.html" class="text-2xl font-bold text-indigo-600">SuaLogo</a>
+                <div class="flex items-center space-x-4">
+                    <div id="menu-visitante">
+                        <a href="login.html" id="nav-login" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
+                    </div>
+                    <div id="menu-usuario" class="hidden flex items-center space-x-4">
+                        <span id="nav-user" class="text-sm text-gray-700"></span>
+                        <a href="minha_conta.html" class="text-sm text-gray-500 hover:text-indigo-600">Minha Conta</a>
+                        <button id="btn-logout" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Sair</button>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -24,53 +35,8 @@
             
             <!-- Lista de Itens -->
             <section class="lg:col-span-7">
-                <ul class="border-t border-b border-gray-200 divide-y divide-gray-200">
-                    
-                    <!-- Item 1 -->
-                    <li class="flex py-6">
-                        <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-white">
-                            <!-- Placeholder IMG -->
-                        </div>
-
-                        <div class="ml-4 flex flex-1 flex-col">
-                            <div>
-                                <div class="flex justify-between text-base font-medium text-gray-900">
-                                    <h3><a href="produto_detalhe.html">Notebook Gamer</a></h3>
-                                    <p class="ml-4">R$ 4.500,00</p>
-                                </div>
-                                <p class="mt-1 text-sm text-gray-500">Preto</p>
-                            </div>
-                            <div class="flex flex-1 items-end justify-between text-sm">
-                                <p class="text-gray-500">Qtd 1</p>
-                                <div class="flex">
-                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remover</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Item 2 -->
-                    <li class="flex py-6">
-                        <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-white">
-                            <!-- Placeholder IMG -->
-                        </div>
-
-                        <div class="ml-4 flex flex-1 flex-col">
-                            <div>
-                                <div class="flex justify-between text-base font-medium text-gray-900">
-                                    <h3><a href="produto_detalhe.html">Mouse Wireless</a></h3>
-                                    <p class="ml-4">R$ 150,00</p>
-                                </div>
-                                <p class="mt-1 text-sm text-gray-500">Óptico</p>
-                            </div>
-                            <div class="flex flex-1 items-end justify-between text-sm">
-                                <p class="text-gray-500">Qtd 1</p>
-                                <div class="flex">
-                                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remover</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+                <ul id="lista-itens" class="border-t border-b border-gray-200 divide-y divide-gray-200">
+                    <li class="py-6 text-center text-gray-500">Carregando carrinho...</li>
                 </ul>
             </section>
 
@@ -83,27 +49,146 @@
                         <dt class="flex items-center text-sm text-gray-600">
                             <span>Subtotal</span>
                         </dt>
-                        <dd class="text-sm font-medium text-gray-900">R$ 4.650,00</dd>
+                        <dd id="subtotal" class="text-sm font-medium text-gray-900">R$ 0,00</dd>
                     </div>
                     <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                         <dt class="flex text-sm text-gray-600">
                             <span>Frete Estimado</span>
                         </dt>
-                        <dd class="text-sm font-medium text-gray-900">R$ 50,00</dd>
+                        <dd id="frete" class="text-sm font-medium text-gray-900">R$ 0,00</dd>
                     </div>
                     <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                         <dt class="text-base font-medium text-gray-900">Total</dt>
-                        <dd class="text-base font-medium text-gray-900">R$ 4.700,00</dd>
+                        <dd id="total" class="text-base font-medium text-gray-900">R$ 0,00</dd>
                     </div>
                 </div>
 
                 <div class="mt-6">
-                    <a href="finalizar_pedido.html" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 flex justify-center">
+                    <a id="btn-finalizar" href="finalizar_pedido.html" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 flex justify-center">
                         Finalizar Compra
                     </a>
                 </div>
             </section>
         </div>
     </div>
+
+<script>
+    let carrinho = [];
+
+    function formatarPreco(valor) {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(valor);
+    }
+
+    function carregarCarrinho() {
+        const carrinhoStr = localStorage.getItem('carrinho');
+        carrinho = carrinhoStr ? JSON.parse(carrinhoStr) : [];
+        renderizarCarrinho();
+    }
+
+    function renderizarCarrinho() {
+        const listaItens = document.getElementById('lista-itens');
+        
+        if (carrinho.length === 0) {
+            listaItens.innerHTML = `
+                <li class="py-12 text-center">
+                    <p class="text-gray-500 text-lg mb-4">Seu carrinho está vazio</p>
+                    <a href="produtos.html" class="text-indigo-600 hover:text-indigo-500 font-medium">
+                        Continuar comprando
+                    </a>
+                </li>
+            `;
+            atualizarResumo(0);
+            document.getElementById('btn-finalizar').style.display = 'none';
+            return;
+        }
+
+        listaItens.innerHTML = '';
+        
+        carrinho.forEach((item, index) => {
+            const precoFormatado = formatarPreco(parseFloat(item.preco));
+            const subtotalItem = formatarPreco(parseFloat(item.preco) * item.qtd);
+            
+            const li = document.createElement('li');
+            li.className = 'flex py-6';
+            li.innerHTML = `
+                <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-white flex items-center justify-center">
+                    ${item.imagem 
+                        ? `<img src="${item.imagem}" alt="${item.nome}" class="h-full w-full object-cover">` 
+                        : `<span class="text-gray-400 text-xs">Sem Imagem</span>`
+                    }
+                </div>
+                <div class="ml-4 flex flex-1 flex-col">
+                    <div>
+                        <div class="flex justify-between text-base font-medium text-gray-900">
+                            <h3><a href="produto_detalhe.html?id=${item.id}">${item.nome}</a></h3>
+                            <p class="ml-4">${precoFormatado}</p>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Subtotal: ${subtotalItem}</p>
+                    </div>
+                    <div class="flex flex-1 items-end justify-between text-sm">
+                        <div class="flex items-center gap-2">
+                            <button onclick="diminuirQuantidade(${index})" class="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100">-</button>
+                            <p class="text-gray-500">Qtd ${item.qtd}</p>
+                            <button onclick="aumentarQuantidade(${index})" class="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100">+</button>
+                        </div>
+                        <div class="flex">
+                            <button onclick="removerItem(${index})" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                Remover
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            listaItens.appendChild(li);
+        });
+
+        atualizarResumo();
+        document.getElementById('btn-finalizar').style.display = 'flex';
+    }
+
+    function atualizarResumo() {
+        const subtotal = carrinho.reduce((acc, item) => {
+            return acc + (parseFloat(item.preco) * item.qtd);
+        }, 0);
+        
+        const frete = subtotal > 0 ? 50.00 : 0;
+        const total = subtotal + frete;
+
+        document.getElementById('subtotal').textContent = formatarPreco(subtotal);
+        document.getElementById('frete').textContent = formatarPreco(frete);
+        document.getElementById('total').textContent = formatarPreco(total);
+    }
+
+    function removerItem(index) {
+        carrinho.splice(index, 1);
+        localStorage.setItem('carrinho', JSON.stringify(carrinho));
+        renderizarCarrinho();
+    }
+
+    function aumentarQuantidade(index) {
+        carrinho[index].qtd += 1;
+        localStorage.setItem('carrinho', JSON.stringify(carrinho));
+        renderizarCarrinho();
+    }
+
+    function diminuirQuantidade(index) {
+        if (carrinho[index].qtd > 1) {
+            carrinho[index].qtd -= 1;
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            renderizarCarrinho();
+        } else {
+            removerItem(index);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        await initAuth(); // Inicializa sistema de autenticação
+        carregarCarrinho();
+    });
+</script>
+<script src="js/auth.js"></script>
 </body>
 </html>

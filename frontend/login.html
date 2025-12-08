@@ -9,8 +9,28 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
+    <script src="js/auth.js"></script>
 </head>
 <body class="bg-gray-100">
+
+    <!-- Navbar com autenticação -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html" class="text-2xl font-bold text-indigo-600">SuaLogo</a>
+                <div class="flex items-center space-x-4">
+                    <div id="menu-visitante">
+                        <a href="login.html" id="nav-login" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Entrar</a>
+                    </div>
+                    <div id="menu-usuario" class="hidden flex items-center space-x-4">
+                        <span id="nav-user" class="text-sm text-gray-700"></span>
+                        <a href="minha_conta.html" class="text-sm text-gray-500 hover:text-indigo-600">Minha Conta</a>
+                        <button id="btn-logout" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Sair</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
@@ -85,7 +105,7 @@
     <script>
         const form = document.getElementById('loginForm');
         const messageBox = document.getElementById('message');
-        const API_URL = "http://localhost:8000";
+        // API_URL já está definido em auth.js
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault(); 
@@ -102,13 +122,19 @@
 
             try {
                 // 1. Envia requisição para o Backend
-                const response = await fetch(`${API_URL}/login`, {
+                const apiUrl = window.API_URL || 'http://localhost:8000';
+                console.log('Tentando fazer login em:', apiUrl);
+                
+                const response = await fetch(`${apiUrl}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
 
+                console.log('Resposta recebida:', response.status, response.statusText);
+
                 const data = await response.json();
+                console.log('Dados recebidos:', data);
 
                 if (response.ok) {
                     // 2. SUCESSO
@@ -117,28 +143,40 @@
                     
                     // 3. Salva o usuário no navegador (localStorage)
                     // Isso permite saber quem está logado nas outras páginas
-                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                    if (data.usuario) {
+                        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                        console.log('Usuário salvo no localStorage:', data.usuario);
+                    } else {
+                        console.error('Resposta não contém dados do usuário:', data);
+                        throw new Error('Resposta do servidor inválida');
+                    }
 
                     // Redireciona
                     setTimeout(() => {
-                        // Se você quiser criar lógica de admin futuramente, verificaria data.usuario.role aqui
-                        // Por enquanto mandamos todos para a home
+                        console.log('Redirecionando para index.html');
                         window.location.href = 'index.html'; 
                     }, 1000);
 
                 } else {
                     // 4. ERRO (Senha errada ou usuário não existe)
-                    throw new Error(data.detail || 'Falha no login.');
+                    const errorMsg = data.detail || data.message || 'Falha no login.';
+                    console.error('Erro no login:', errorMsg);
+                    throw new Error(errorMsg);
                 }
 
             } catch (error) {
-                console.error(error);
-                messageBox.textContent = error.message;
+                console.error('Erro completo:', error);
+                messageBox.textContent = error.message || 'Erro ao fazer login. Verifique sua conexão e tente novamente.';
                 messageBox.className = 'text-sm text-center font-medium text-red-600 bg-red-50 p-2 rounded block';
             } finally {
                 btn.disabled = false;
                 btn.textContent = originalText;
             }
+        });
+
+        // Inicializa autenticação na página de login
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initAuth();
         });
     </script>
 

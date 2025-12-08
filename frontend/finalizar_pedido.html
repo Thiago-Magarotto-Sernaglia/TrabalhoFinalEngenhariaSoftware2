@@ -207,13 +207,13 @@
 
             <div class="checkout-summary">
                 <h2><i class="fas fa-shopping-cart"></i> Seu Pedido</h2>
-                <div class="summary-item"><span>Subtotal dos Produtos:</span> <span>R$ 359,40</span></div>
-                <div class="summary-item"><span>Frete (PAC):</span> <span>R$ 25,00</span></div>
+                <div class="summary-item"><span>Subtotal dos Produtos:</span> <span id="subtotal-produtos">R$ 0,00</span></div>
+                <div class="summary-item"><span>Frete:</span> <span id="frete-valor">R$ 0,00</span></div>
                 <div class="summary-item"><span>Descontos:</span> <span style="color: #e74c3c;">- R$ 0,00</span></div>
                 
                 <div class="summary-total">
                     <span>Total a Pagar:</span> 
-                    <span>R$ 384,40</span>
+                    <span id="total-pagar">R$ 0,00</span>
                 </div>
 
                 <p style="font-size: 0.9em; margin-top: 20px; color: #555;">Ao finalizar a compra, você concorda com nossos Termos de Uso.</p>
@@ -221,5 +221,124 @@
             
         </div>
     </div>
+
+<script>
+    let carrinho = [];
+
+    function formatarPreco(valor) {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(valor);
+    }
+
+    function carregarCarrinho() {
+        const carrinhoStr = localStorage.getItem('carrinho');
+        carrinho = carrinhoStr ? JSON.parse(carrinhoStr) : [];
+        
+        if (carrinho.length === 0) {
+            alert('Seu carrinho está vazio! Redirecionando para produtos...');
+            window.location.href = 'produtos.html';
+            return;
+        }
+
+        atualizarResumo();
+        atualizarFrete();
+    }
+
+    function atualizarResumo() {
+        const subtotal = carrinho.reduce((acc, item) => {
+            return acc + (parseFloat(item.preco) * item.qtd);
+        }, 0);
+
+        document.getElementById('subtotal-produtos').textContent = formatarPreco(subtotal);
+        calcularTotal();
+    }
+
+    function atualizarFrete() {
+        const freteRadio = document.querySelector('input[name="frete"]:checked');
+        const freteValor = freteRadio.value === 'sedex' ? 45.00 : 25.00;
+        document.getElementById('frete-valor').textContent = formatarPreco(freteValor);
+        calcularTotal();
+
+        // Atualiza quando mudar o frete
+        document.querySelectorAll('input[name="frete"]').forEach(radio => {
+            radio.addEventListener('change', atualizarFrete);
+        });
+    }
+
+    function calcularTotal() {
+        const subtotal = carrinho.reduce((acc, item) => {
+            return acc + (parseFloat(item.preco) * item.qtd);
+        }, 0);
+        
+        const freteRadio = document.querySelector('input[name="frete"]:checked');
+        const frete = freteRadio ? (freteRadio.value === 'sedex' ? 45.00 : 25.00) : 0;
+        const total = subtotal + frete;
+
+        document.getElementById('total-pagar').textContent = formatarPreco(total);
+    }
+
+    // Intercepta o submit do formulário
+    document.querySelector('.checkout-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (carrinho.length === 0) {
+            alert('Seu carrinho está vazio!');
+            return;
+        }
+
+        const formData = {
+            endereco: {
+                cep: document.getElementById('cep').value,
+                rua: document.getElementById('rua').value,
+                numero: document.getElementById('numero').value,
+                complemento: document.getElementById('complemento').value
+            },
+            frete: document.querySelector('input[name="frete"]:checked').value,
+            metodo_pagamento: document.querySelector('input[name="metodo_pagamento"]:checked').value,
+            itens: carrinho
+        };
+
+        // Calcula valores finais
+        const subtotal = carrinho.reduce((acc, item) => {
+            return acc + (parseFloat(item.preco) * item.qtd);
+        }, 0);
+        const freteRadio = document.querySelector('input[name="frete"]:checked');
+        const frete = freteRadio ? (freteRadio.value === 'sedex' ? 45.00 : 25.00) : 0;
+        const total = subtotal + frete;
+
+        // Cria o pedido
+        const pedido = {
+            id: Date.now(), // ID único baseado em timestamp
+            data: new Date().toLocaleDateString('pt-BR'),
+            status: 'Em Preparação', // Status inicial
+            endereco: formData.endereco,
+            frete: formData.frete,
+            metodo_pagamento: formData.metodo_pagamento,
+            itens: carrinho,
+            subtotal: subtotal,
+            frete_valor: frete,
+            total: total
+        };
+
+        // Salva o pedido no localStorage
+        let pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+        pedidos.unshift(pedido); // Adiciona no início do array
+        localStorage.setItem('pedidos', JSON.stringify(pedidos));
+
+        // Por enquanto, apenas simula o pedido
+        // Você pode implementar um endpoint no backend depois
+        alert('Pedido finalizado com sucesso!\n\nNúmero do pedido: #' + pedido.id);
+        
+        // Limpa o carrinho
+        localStorage.removeItem('carrinho');
+        
+        // Redireciona para página de sucesso ou lista de pedidos
+        window.location.href = 'lista_pedidos.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', carregarCarrinho);
+</script>
 </body>
 </html>
