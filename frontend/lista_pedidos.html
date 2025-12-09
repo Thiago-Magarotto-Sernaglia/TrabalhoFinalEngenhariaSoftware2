@@ -106,6 +106,9 @@
                     </div>
                     <div id="menu-usuario" class="hidden flex items-center space-x-4">
                         <span id="nav-user" class="text-sm text-gray-700"></span>
+                        <a href="lista_pedidos.html" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium" title="Meus Pedidos">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        </a>
                         <a href="minha_conta.html" class="text-sm text-gray-500 hover:text-indigo-600">Minha Conta</a>
                         <button id="btn-logout" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Sair</button>
                     </div>
@@ -115,8 +118,15 @@
     </nav>
 
     <div class="container">
-        <h1><i class="fas fa-boxes"></i> Meus Pedidos</h1>
-        <p>Visualize o status e os detalhes de todos os seus pedidos recentes e anteriores.</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h1 style="margin-bottom: 10px;"><i class="fas fa-boxes"></i> Meus Pedidos</h1>
+                <p style="margin: 0;">Visualize o status e os detalhes de todos os seus pedidos recentes e anteriores. <strong id="total-pedidos-badge" style="color: #3498db;">0 pedidos</strong></p>
+            </div>
+            <button onclick="atualizarLista()" style="background-color: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#2980b9'" onmouseout="this.style.backgroundColor='#3498db'">
+                <i class="fas fa-sync-alt"></i> Atualizar
+            </button>
+        </div>
 
         <table>
             <thead>
@@ -159,7 +169,16 @@
 
         function carregarPedidos() {
             const tbody = document.getElementById('pedidos-tbody');
-            const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+            let pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+
+            console.log('Carregando pedidos. Total encontrado:', pedidos.length);
+            console.log('Pedidos:', pedidos);
+
+            // Atualiza contador
+            const totalBadge = document.getElementById('total-pedidos-badge');
+            if (totalBadge) {
+                totalBadge.textContent = `${pedidos.length} pedido${pedidos.length !== 1 ? 's' : ''}`;
+            }
 
             if (pedidos.length === 0) {
                 tbody.innerHTML = `
@@ -174,6 +193,9 @@
                 `;
                 return;
             }
+
+            // Ordena pedidos por ID (mais recentes primeiro)
+            pedidos.sort((a, b) => b.id - a.id);
 
             tbody.innerHTML = '';
 
@@ -227,9 +249,34 @@
             alert(detalhes);
         }
 
+        // Função para atualizar a lista (pode ser chamada manualmente ou automaticamente)
+        function atualizarLista() {
+            console.log('Atualizando lista de pedidos...');
+            const btn = event?.target || document.querySelector('button[onclick="atualizarLista()"]');
+            if (btn) {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Atualizando...';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    carregarPedidos();
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 300);
+            } else {
+                carregarPedidos();
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             await initAuth(); // Inicializa sistema de autenticação
             carregarPedidos();
+            
+            // Atualiza a lista a cada 3 segundos para pegar mudanças do admin
+            // (reduzido para não sobrecarregar)
+            setInterval(() => {
+                carregarPedidos();
+            }, 3000);
         });
     </script>
 </body>
